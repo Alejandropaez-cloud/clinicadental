@@ -133,6 +133,10 @@ public class BackupUtil {
             em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
 
             tx.commit();
+
+            // Limpiar caché L2 de EclipseLink para que las próximas consultas
+            // obtengan los datos reales de la BD y no objetos antiguos en caché
+            emf.getCache().evictAll();
         } catch (Exception ex) {
             if (tx.isActive()) tx.rollback();
             try {
