@@ -11,21 +11,26 @@ import java.awt.*;
  */
 public class MainFrame extends JFrame {
 
+    private final PacientePanel pnlPaciente = new PacientePanel();
+    private final DoctorPanel pnlDoctor = new DoctorPanel();
+    private final CitaPanel pnlCita = new CitaPanel();
+    private final TratamientoPanel pnlTratamiento = new TratamientoPanel();
+    private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel();
+    private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel();
+
     public MainFrame() {
-        // Configuración de la ventana principal
         setTitle("Clínica Dental - Sistema de Gestión");
         setSize(950, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centrar en pantalla
+        setLocationRelativeTo(null);
 
-        // JTabbedPane crea un sistema de pestañas
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Pacientes", new PacientePanel());
-        tabbedPane.addTab("Doctores", new DoctorPanel());
-        tabbedPane.addTab("Citas", new CitaPanel());
-        tabbedPane.addTab("Tratamientos", new TratamientoPanel());
-        tabbedPane.addTab("Historial Clínico", new HistorialClinicoPanel());
-        tabbedPane.addTab("Cita-Tratamiento", new CitaTratamientoPanel());
+        tabbedPane.addTab("Pacientes", pnlPaciente);
+        tabbedPane.addTab("Doctores", pnlDoctor);
+        tabbedPane.addTab("Citas", pnlCita);
+        tabbedPane.addTab("Tratamientos", pnlTratamiento);
+        tabbedPane.addTab("Historial Clínico", pnlHistorial);
+        tabbedPane.addTab("Cita-Tratamiento", pnlCitaTratamiento);
 
         setLayout(new BorderLayout());
         add(tabbedPane, BorderLayout.CENTER);
@@ -52,6 +57,12 @@ public class MainFrame extends JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     BackupUtil.restaurarUltimaCopia();
+                    pnlPaciente.loadData();
+                    pnlDoctor.loadData();
+                    pnlCita.loadData();
+                    pnlTratamiento.loadData();
+                    pnlHistorial.loadData();
+                    pnlCitaTratamiento.loadData();
                     JOptionPane.showMessageDialog(this, "Datos restaurados correctamente");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error al restaurar: " + ex.getMessage());
