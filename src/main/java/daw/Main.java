@@ -1,7 +1,10 @@
 package daw;
 
+import views.MainFrame;
+
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        MainFrame.main(args);
     }
 }

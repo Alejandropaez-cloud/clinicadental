@@ -1,5 +1,6 @@
 ﻿package views;
 
+import util.BackupUtil;
 import javax.swing.*;
 import java.awt.*;
 
@@ -29,8 +30,35 @@ public class MainFrame extends JFrame {
         setLayout(new BorderLayout());
         add(tabbedPane, BorderLayout.CENTER);
 
-        // Panel inferior con botón de salida
+        // Panel inferior con botones
         JPanel bottomPanel = new JPanel();
+
+        JButton btnCopia = new JButton("Copia de Seguridad");
+        btnCopia.addActionListener(e -> {
+            try {
+                BackupUtil.realizarCopia();
+                JOptionPane.showMessageDialog(this, "Copia de seguridad realizada con éxito");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al hacer copia: " + ex.getMessage());
+            }
+        });
+        bottomPanel.add(btnCopia);
+
+        JButton btnRestaurar = new JButton("Restaurar");
+        btnRestaurar.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Se borrarán TODOS los datos actuales y se restaurará la última copia.\n¿Continuar?",
+                "Confirmar restauración", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    BackupUtil.restaurarUltimaCopia();
+                    JOptionPane.showMessageDialog(this, "Datos restaurados correctamente");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al restaurar: " + ex.getMessage());
+                }
+            }
+        });
+        bottomPanel.add(btnRestaurar);
 
         JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(e -> System.exit(0));
