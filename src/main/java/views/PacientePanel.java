@@ -1,4 +1,4 @@
-﻿package views;
+package views;
 
 import controllers.controladores.PacienteController;
 import models.modelos.entidades.Paciente;
@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Panel de gestión de Pacientes.
@@ -135,29 +136,38 @@ public class PacientePanel extends JPanel {
 
         btnGuardar.addActionListener(e -> {
             try {
+                String email = txtEmail.getText();
+                if (!email.isEmpty()) {
+                    Pattern emailRegex = Pattern.compile(
+                        "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+                    );
+                    if (!emailRegex.matcher(email).matches()) {
+                        JOptionPane.showMessageDialog(dialog, "El email no tiene un formato válido");
+                        return;
+                    }
+                }
+
                 Date fechaNac = txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText());
 
                 if (paciente == null) {
-                    // Crear nuevo paciente
                     Paciente nuevo = new Paciente(txtDNI.getText(), txtNombre.getText(),
                             txtApellidos.getText(), fechaNac);
                     nuevo.setTelefono(txtTelefono.getText());
-                    nuevo.setEmail(txtEmail.getText());
+                    nuevo.setEmail(email);
                     nuevo.setDireccion(txtDireccion.getText());
                     controller.create(nuevo);
                 } else {
-                    // Editar paciente existente
                     paciente.setDni(txtDNI.getText());
                     paciente.setNombre(txtNombre.getText());
                     paciente.setApellidos(txtApellidos.getText());
                     paciente.setFechaNacimiento(fechaNac);
                     paciente.setTelefono(txtTelefono.getText());
-                    paciente.setEmail(txtEmail.getText());
+                    paciente.setEmail(email);
                     paciente.setDireccion(txtDireccion.getText());
                     controller.update(paciente);
                 }
-                loadData(); // Recargar tabla
-                dialog.dispose(); // Cerrar diálogo
+                loadData();
+                dialog.dispose();
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(dialog, "Formato de fecha incorrecto. Usa dd/MM/yyyy");
             } catch (Exception ex) {

@@ -1,4 +1,4 @@
-﻿package views;
+package views;
 
 import controllers.controladores.CitaController;
 import controllers.controladores.PacienteController;

@@ -1,4 +1,4 @@
-﻿package views;
+package views;
 
 import controllers.controladores.DoctorController;
 import models.modelos.entidades.Doctor;

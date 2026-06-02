@@ -1,4 +1,4 @@
-﻿package views;
+package views;
 
 import controllers.controladores.TratamientoController;
 import models.modelos.entidades.Tratamiento;
