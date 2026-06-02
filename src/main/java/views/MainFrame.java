@@ -12,6 +12,8 @@ public class MainFrame extends JFrame {
     private final TratamientoPanel pnlTratamiento = new TratamientoPanel();
     private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel();
     private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel();
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel panelCentral = new JPanel(cardLayout);
 
     public MainFrame() {
         setTitle("Clinica Dental");
@@ -19,15 +21,23 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Pacientes", pnlPaciente);
-        tabs.addTab("Doctores", pnlDoctor);
-        tabs.addTab("Citas", pnlCita);
-        tabs.addTab("Tratamientos", pnlTratamiento);
-        tabs.addTab("Historial", pnlHistorial);
-        tabs.addTab("Cita-Tratamiento", pnlCitaTratamiento);
+        panelCentral.add(pnlPaciente, "Pacientes");
+        panelCentral.add(pnlDoctor, "Doctores");
+        panelCentral.add(pnlCita, "Citas");
+        panelCentral.add(pnlTratamiento, "Tratamientos");
+        panelCentral.add(pnlHistorial, "Historial");
+        panelCentral.add(pnlCitaTratamiento, "CitaTratamiento");
 
-        add(tabs, BorderLayout.CENTER);
+        JPanel nav = new JPanel(new GridLayout(6, 1, 5, 10));
+        nav.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        String[] names = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "Cita-Tratamiento"};
+        String[] keys = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "CitaTratamiento"};
+        for (int i = 0; i < names.length; i++) {
+            JButton btn = new JButton(names[i]);
+            String key = keys[i];
+            btn.addActionListener(e -> cardLayout.show(panelCentral, key));
+            nav.add(btn);
+        }
 
         JPanel bottom = new JPanel();
         JButton btnBackup = new JButton("Copia Seguridad");
@@ -64,7 +74,12 @@ public class MainFrame extends JFrame {
         bottom.add(btnBackup);
         bottom.add(btnRestore);
         bottom.add(btnSalir);
+
+        add(nav, BorderLayout.WEST);
+        add(panelCentral, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
+
+        cardLayout.show(panelCentral, "Pacientes");
     }
 
     public static void main(String[] args) {
