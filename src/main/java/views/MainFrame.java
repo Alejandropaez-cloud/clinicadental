@@ -2,6 +2,7 @@ package views;
 
 import util.BackupUtil;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
@@ -15,11 +16,19 @@ public class MainFrame extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel panelCentral = new JPanel(cardLayout);
 
+    private Color azul = new Color(33, 150, 243);
+    private Color azulOscuro = new Color(25, 118, 210);
+    private Color blanco = Color.WHITE;
+    private Color fondo = new Color(240, 245, 250);
+
     public MainFrame() {
         setTitle("Clinica Dental");
         setSize(950, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setBackground(fondo);
+
+        panelCentral.setBackground(fondo);
 
         panelCentral.add(pnlPaciente, "Pacientes");
         panelCentral.add(pnlDoctor, "Doctores");
@@ -28,19 +37,49 @@ public class MainFrame extends JFrame {
         panelCentral.add(pnlHistorial, "Historial");
         panelCentral.add(pnlCitaTratamiento, "CitaTratamiento");
 
-        JPanel nav = new JPanel(new GridLayout(6, 1, 5, 10));
-        nav.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel nav = new JPanel(new GridLayout(6, 1, 5, 12));
+        nav.setBackground(azul);
+        nav.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         String[] names = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "Cita-Tratamiento"};
         String[] keys = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "CitaTratamiento"};
         for (int i = 0; i < names.length; i++) {
             JButton btn = new JButton(names[i]);
+            btn.setBackground(azulOscuro);
+            btn.setForeground(blanco);
+            btn.setFont(btn.getFont().deriveFont(Font.BOLD, 14f));
+            btn.setFocusPainted(false);
+            btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             String key = keys[i];
             btn.addActionListener(e -> cardLayout.show(panelCentral, key));
             nav.add(btn);
         }
 
         JPanel bottom = new JPanel();
+        bottom.setBackground(blanco);
+        bottom.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(2, 0, 0, 0, azul),
+            new EmptyBorder(8, 8, 8, 8)
+        ));
+
         JButton btnBackup = new JButton("Copia Seguridad");
+        btnBackup.setBackground(new Color(76, 175, 80));
+        btnBackup.setForeground(blanco);
+        btnBackup.setFocusPainted(false);
+        btnBackup.setFont(btnBackup.getFont().deriveFont(Font.BOLD, 12f));
+
+        JButton btnRestore = new JButton("Restaurar");
+        btnRestore.setBackground(new Color(255, 152, 0));
+        btnRestore.setForeground(blanco);
+        btnRestore.setFocusPainted(false);
+        btnRestore.setFont(btnRestore.getFont().deriveFont(Font.BOLD, 12f));
+
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBackground(new Color(244, 67, 54));
+        btnSalir.setForeground(blanco);
+        btnSalir.setFocusPainted(false);
+        btnSalir.setFont(btnSalir.getFont().deriveFont(Font.BOLD, 12f));
+
         btnBackup.addActionListener(e -> {
             try {
                 BackupUtil.realizarCopia();
@@ -49,7 +88,6 @@ public class MainFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
             }
         });
-        JButton btnRestore = new JButton("Restaurar");
         btnRestore.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(this,
                     "Se borraran todos los datos y se restaurara la ultima copia. Continuar?",
@@ -68,7 +106,6 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-        JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(e -> System.exit(0));
 
         bottom.add(btnBackup);

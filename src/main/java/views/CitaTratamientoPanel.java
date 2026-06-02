@@ -20,29 +20,47 @@ public class CitaTratamientoPanel extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private Color azul = new Color(33, 150, 243);
+    private Color blanco = Color.WHITE;
 
     public CitaTratamientoPanel() {
         controller = new CitaTratamientoController();
         citaController = new CitaController();
         tratamientoController = new TratamientoController();
         setLayout(new BorderLayout());
+        setBackground(new Color(240, 245, 250));
         initComponents();
         loadData();
     }
 
     private void initComponents() {
+        JLabel titulo = new JLabel("CITA - TRATAMIENTO", SwingConstants.CENTER);
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
+        titulo.setForeground(azul);
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
+
         String[] cols = {"ID", "Cita", "Tratamiento", "Cantidad", "Fecha Registro"};
         model = new DefaultTableModel(cols, 0) {
             public boolean isCellEditable(int r, int c) { return false; }
         };
         table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getTableHeader().setBackground(azul);
+        table.getTableHeader().setForeground(blanco);
+        table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f));
+        table.setRowHeight(25);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel pnl = new JPanel();
+        pnl.setBackground(new Color(240, 245, 250));
+        pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
         JButton btnNew = new JButton("Nuevo");
         JButton btnEdit = new JButton("Editar");
         JButton btnDel = new JButton("Eliminar");
+        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false);
+        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false);
+        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false);
         btnNew.addActionListener(e -> dialogo(null));
         btnEdit.addActionListener(e -> editar());
         btnDel.addActionListener(e -> eliminar());
@@ -72,6 +90,7 @@ public class CitaTratamientoPanel extends JPanel {
                 registro == null ? "Nuevo Detalle" : "Editar Detalle", true);
         d.setSize(400, 250);
         d.setLocationRelativeTo(this);
+        d.getContentPane().setBackground(new Color(240, 245, 250));
 
         List<Cita> citas = citaController.findAll();
         List<Tratamiento> tratamientos = tratamientoController.findAll();
@@ -100,14 +119,18 @@ public class CitaTratamientoPanel extends JPanel {
         }
 
         JPanel form = new JPanel(new GridLayout(3, 2, 5, 5));
+        form.setBackground(new Color(240, 245, 250));
         form.add(new JLabel("Cita:")); form.add(cmbCita);
         form.add(new JLabel("Tratamiento:")); form.add(cmbTrat);
         form.add(new JLabel("Cantidad:")); form.add(txtCant);
         d.add(form, BorderLayout.CENTER);
 
         JPanel pnlBtn = new JPanel();
+        pnlBtn.setBackground(new Color(240, 245, 250));
         JButton btnOk = new JButton("Guardar");
+        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false);
         JButton btnCancel = new JButton("Cancelar");
+        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false);
         btnOk.addActionListener(e -> {
             try {
                 int iCita = cmbCita.getSelectedIndex();
