@@ -2,25 +2,17 @@ package views;
 
 import controllers.controladores.PacienteController;
 import models.modelos.entidades.Paciente;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
-/**
- * Panel de gestión de Pacientes.
- * Muestra una tabla con todos los pacientes y botones para crear, editar y eliminar.
- */
 public class PacientePanel extends JPanel {
 
     private PacienteController controller;
     private JTable table;
-    private DefaultTableModel tableModel;
+    private DefaultTableModel model;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public PacientePanel() {
@@ -30,188 +22,129 @@ public class PacientePanel extends JPanel {
         loadData();
     }
 
-    /**
-     * Inicializa los componentes del panel: tabla y botones.
-     */
     private void initComponents() {
-        // Modelo de tabla: define las columnas y hace que no sean editables
-        String[] columnas = {"ID", "DNI", "Nombre", "Apellidos", "Fecha Nac.", "Teléfono", "Email", "Dirección"};
-        tableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // La tabla no se puede editar directamente
-            }
+        String[] cols = {"ID", "DNI", "Nombre", "Apellidos", "Fecha Nac.", "Telefono", "Email", "Direccion"};
+        model = new DefaultTableModel(cols, 0) {
+            public boolean isCellEditable(int r, int c) { return false; }
         };
-        table = new JTable(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Solo seleccionar una fila
+        table = new JTable(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Panel de botones
-        JPanel buttonPanel = new JPanel();
-        JButton btnNuevo = new JButton("Nuevo Paciente");
-        JButton btnEditar = new JButton("Editar");
-        JButton btnEliminar = new JButton("Eliminar");
-
-        btnNuevo.addActionListener(e -> mostrarDialogo(null));
-        btnEditar.addActionListener(e -> editarPaciente());
-        btnEliminar.addActionListener(e -> eliminarPaciente());
-
-        buttonPanel.add(btnNuevo);
-        buttonPanel.add(btnEditar);
-        buttonPanel.add(btnEliminar);
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel pnl = new JPanel();
+        JButton btnNew = new JButton("Nuevo");
+        JButton btnEdit = new JButton("Editar");
+        JButton btnDel = new JButton("Eliminar");
+        btnNew.addActionListener(e -> dialogo(null));
+        btnEdit.addActionListener(e -> editar());
+        btnDel.addActionListener(e -> eliminar());
+        pnl.add(btnNew);
+        pnl.add(btnEdit);
+        pnl.add(btnDel);
+        add(pnl, BorderLayout.SOUTH);
     }
 
-    /**
-     * Carga todos los pacientes de la BD y los muestra en la tabla.
-     */
     public void loadData() {
-        tableModel.setRowCount(0); // Limpiar tabla
-        List<Paciente> pacientes = controller.findAll();
-        for (Paciente p : pacientes) {
-            tableModel.addRow(new Object[]{
-                    p.getCodPaciente(),
-                    p.getDni(),
-                    p.getNombre(),
-                    p.getApellidos(),
-                    p.getFechaNacimiento() != null ? sdf.format(p.getFechaNacimiento()) : "",
-                    p.getTelefono(),
-                    p.getEmail(),
-                    p.getDireccion()
+        model.setRowCount(0);
+        for (Paciente p : controller.findAll()) {
+            model.addRow(new Object[]{
+                p.getCodPaciente(), p.getDni(), p.getNombre(), p.getApellidos(),
+                p.getFechaNacimiento() != null ? sdf.format(p.getFechaNacimiento()) : "",
+                p.getTelefono(), p.getEmail(), p.getDireccion()
             });
         }
     }
 
-    /**
-     * Abre un diálogo para crear o editar un paciente.
-     * Si paciente es null → crea uno nuevo. Si no → edita el existente.
-     */
-    private void mostrarDialogo(Paciente paciente) {
-        // Diálogo modal (bloquea la ventana principal mientras está abierto)
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
+    private void dialogo(Paciente paciente) {
+        JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
                 paciente == null ? "Nuevo Paciente" : "Editar Paciente", true);
-        dialog.setSize(400, 400);
-        dialog.setLocationRelativeTo(this);
+        d.setSize(350, 300);
+        d.setLocationRelativeTo(this);
+        d.setLayout(new BorderLayout());
 
-        // Formulario con GridBagLayout (layout flexible)
-        JPanel form = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel form = new JPanel(new GridLayout(7, 2, 5, 5));
+        JTextField txtDni = new JTextField();
+        JTextField txtNom = new JTextField();
+        JTextField txtApe = new JTextField();
+        JTextField txtFecha = new JTextField();
+        JTextField txtTel = new JTextField();
+        JTextField txtEmail = new JTextField();
+        JTextField txtDir = new JTextField();
 
-        JTextField txtDNI = new JTextField(20);
-        JTextField txtNombre = new JTextField(20);
-        JTextField txtApellidos = new JTextField(20);
-        JTextField txtFecha = new JTextField(20);
-        JTextField txtTelefono = new JTextField(20);
-        JTextField txtEmail = new JTextField(20);
-        JTextField txtDireccion = new JTextField(20);
-
-        // Si estamos editando, rellenar los campos con los datos actuales
         if (paciente != null) {
-            txtDNI.setText(paciente.getDni());
-            txtNombre.setText(paciente.getNombre());
-            txtApellidos.setText(paciente.getApellidos());
+            txtDni.setText(paciente.getDni());
+            txtNom.setText(paciente.getNombre());
+            txtApe.setText(paciente.getApellidos());
             txtFecha.setText(paciente.getFechaNacimiento() != null ? sdf.format(paciente.getFechaNacimiento()) : "");
-            txtTelefono.setText(paciente.getTelefono());
+            txtTel.setText(paciente.getTelefono());
             txtEmail.setText(paciente.getEmail());
-            txtDireccion.setText(paciente.getDireccion());
+            txtDir.setText(paciente.getDireccion());
         }
 
-        // Añadir campos al formulario
-        String[] labels = {"DNI:", "Nombre:", "Apellidos:", "Fecha Nac (dd/MM/yyyy):", "Teléfono:", "Email:", "Dirección:"};
-        JTextField[] fields = {txtDNI, txtNombre, txtApellidos, txtFecha, txtTelefono, txtEmail, txtDireccion};
+        form.add(new JLabel("DNI:"));
+        form.add(txtDni);
+        form.add(new JLabel("Nombre:"));
+        form.add(txtNom);
+        form.add(new JLabel("Apellidos:"));
+        form.add(txtApe);
+        form.add(new JLabel("Fecha Nac (dd/MM/yyyy):"));
+        form.add(txtFecha);
+        form.add(new JLabel("Telefono:"));
+        form.add(txtTel);
+        form.add(new JLabel("Email:"));
+        form.add(txtEmail);
+        form.add(new JLabel("Direccion:"));
+        form.add(txtDir);
 
-        for (int i = 0; i < labels.length; i++) {
-            gbc.gridx = 0;
-            gbc.gridy = i;
-            form.add(new JLabel(labels[i]), gbc);
-            gbc.gridx = 1;
-            form.add(fields[i], gbc);
-        }
+        d.add(form, BorderLayout.CENTER);
 
-        // Botones Guardar y Cancelar
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-
-        btnGuardar.addActionListener(e -> {
+        JPanel pnlBtn = new JPanel();
+        JButton btnOk = new JButton("Guardar");
+        JButton btnCancel = new JButton("Cancelar");
+        btnOk.addActionListener(e -> {
             try {
-                String email = txtEmail.getText();
-                if (!email.isEmpty()) {
-                    Pattern emailRegex = Pattern.compile(
-                        "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-                    );
-                    if (!emailRegex.matcher(email).matches()) {
-                        JOptionPane.showMessageDialog(dialog, "El email no tiene un formato válido");
-                        return;
-                    }
-                }
-
-                Date fechaNac = txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText());
-
                 if (paciente == null) {
-                    Paciente nuevo = new Paciente(txtDNI.getText(), txtNombre.getText(),
-                            txtApellidos.getText(), fechaNac);
-                    nuevo.setTelefono(txtTelefono.getText());
-                    nuevo.setEmail(email);
-                    nuevo.setDireccion(txtDireccion.getText());
-                    controller.create(nuevo);
+                    Paciente n = new Paciente(txtDni.getText(), txtNom.getText(), txtApe.getText(),
+                            txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText()));
+                    n.setTelefono(txtTel.getText());
+                    n.setEmail(txtEmail.getText());
+                    n.setDireccion(txtDir.getText());
+                    controller.create(n);
                 } else {
-                    paciente.setDni(txtDNI.getText());
-                    paciente.setNombre(txtNombre.getText());
-                    paciente.setApellidos(txtApellidos.getText());
-                    paciente.setFechaNacimiento(fechaNac);
-                    paciente.setTelefono(txtTelefono.getText());
-                    paciente.setEmail(email);
-                    paciente.setDireccion(txtDireccion.getText());
+                    paciente.setDni(txtDni.getText());
+                    paciente.setNombre(txtNom.getText());
+                    paciente.setApellidos(txtApe.getText());
+                    paciente.setFechaNacimiento(txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText()));
+                    paciente.setTelefono(txtTel.getText());
+                    paciente.setEmail(txtEmail.getText());
+                    paciente.setDireccion(txtDir.getText());
                     controller.update(paciente);
                 }
                 loadData();
-                dialog.dispose();
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(dialog, "Formato de fecha incorrecto. Usa dd/MM/yyyy");
+                d.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage());
             }
         });
-
-        btnCancelar.addActionListener(e -> dialog.dispose());
-
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-
-        gbc.gridx = 0;
-        gbc.gridy = labels.length;
-        gbc.gridwidth = 2;
-        form.add(panelBotones, gbc);
-
-        dialog.add(form);
-        dialog.setVisible(true);
+        btnCancel.addActionListener(e -> d.dispose());
+        pnlBtn.add(btnOk);
+        pnlBtn.add(btnCancel);
+        d.add(pnlBtn, BorderLayout.SOUTH);
+        d.setVisible(true);
     }
 
-    private void editarPaciente() {
+    private void editar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un paciente para editar");
-            return;
-        }
-        Integer id = (Integer) tableModel.getValueAt(row, 0);
-        Paciente paciente = controller.findById(id);
-        mostrarDialogo(paciente);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un paciente"); return; }
+        dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
-    private void eliminarPaciente() {
+    private void eliminar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un paciente para eliminar");
-            return;
-        }
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar este paciente?",
-                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            Integer id = (Integer) tableModel.getValueAt(row, 0);
-            controller.delete(id);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un paciente"); return; }
+        if (JOptionPane.showConfirmDialog(this, "Eliminar paciente?", "Confirmar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            controller.delete((Integer) model.getValueAt(row, 0));
             loadData();
         }
     }

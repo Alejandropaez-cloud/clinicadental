@@ -4,11 +4,6 @@ import util.BackupUtil;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Ventana principal de la aplicación.
- * Utiliza JTabbedPane para mostrar una pestaña por cada entidad:
- * Pacientes, Doctores, Citas y Tratamientos.
- */
 public class MainFrame extends JFrame {
 
     private final PacientePanel pnlPaciente = new PacientePanel();
@@ -19,42 +14,36 @@ public class MainFrame extends JFrame {
     private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel();
 
     public MainFrame() {
-        setTitle("Clínica Dental - Sistema de Gestión");
+        setTitle("Clinica Dental");
         setSize(950, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Pacientes", pnlPaciente);
-        tabbedPane.addTab("Doctores", pnlDoctor);
-        tabbedPane.addTab("Citas", pnlCita);
-        tabbedPane.addTab("Tratamientos", pnlTratamiento);
-        tabbedPane.addTab("Historial Clínico", pnlHistorial);
-        tabbedPane.addTab("Cita-Tratamiento", pnlCitaTratamiento);
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.addTab("Pacientes", pnlPaciente);
+        tabs.addTab("Doctores", pnlDoctor);
+        tabs.addTab("Citas", pnlCita);
+        tabs.addTab("Tratamientos", pnlTratamiento);
+        tabs.addTab("Historial", pnlHistorial);
+        tabs.addTab("Cita-Tratamiento", pnlCitaTratamiento);
 
-        setLayout(new BorderLayout());
-        add(tabbedPane, BorderLayout.CENTER);
+        add(tabs, BorderLayout.CENTER);
 
-        // Panel inferior con botones
-        JPanel bottomPanel = new JPanel();
-
-        JButton btnCopia = new JButton("Copia de Seguridad");
-        btnCopia.addActionListener(e -> {
+        JPanel bottom = new JPanel();
+        JButton btnBackup = new JButton("Copia Seguridad");
+        btnBackup.addActionListener(e -> {
             try {
                 BackupUtil.realizarCopia();
-                JOptionPane.showMessageDialog(this, "Copia de seguridad realizada con éxito");
+                JOptionPane.showMessageDialog(this, "Copia realizada");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al hacer copia: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
             }
         });
-        bottomPanel.add(btnCopia);
-
-        JButton btnRestaurar = new JButton("Restaurar");
-        btnRestaurar.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this,
-                "Se borrarán TODOS los datos actuales y se restaurará la última copia.\n¿Continuar?",
-                "Confirmar restauración", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (confirm == JOptionPane.YES_OPTION) {
+        JButton btnRestore = new JButton("Restaurar");
+        btnRestore.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(this,
+                    "Se borraran todos los datos y se restaurara la ultima copia. Continuar?",
+                    "Restaurar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 try {
                     BackupUtil.restaurarUltimaCopia();
                     pnlPaciente.loadData();
@@ -63,26 +52,22 @@ public class MainFrame extends JFrame {
                     pnlTratamiento.loadData();
                     pnlHistorial.loadData();
                     pnlCitaTratamiento.loadData();
-                    JOptionPane.showMessageDialog(this, "Datos restaurados correctamente");
+                    JOptionPane.showMessageDialog(this, "Datos restaurados");
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error al restaurar: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 }
             }
         });
-        bottomPanel.add(btnRestaurar);
-
         JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(e -> System.exit(0));
-        bottomPanel.add(btnSalir);
 
-        add(bottomPanel, BorderLayout.SOUTH);
+        bottom.add(btnBackup);
+        bottom.add(btnRestore);
+        bottom.add(btnSalir);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
-        // SwingUtilities.invokeLater asegura que la GUI se cree en el
-        // Event Dispatch Thread (hilo seguro para componentes Swing)
-        SwingUtilities.invokeLater(() -> {
-            new MainFrame().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 }

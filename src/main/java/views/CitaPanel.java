@@ -3,34 +3,22 @@ package views;
 import controllers.controladores.CitaController;
 import controllers.controladores.PacienteController;
 import controllers.controladores.DoctorController;
-import controllers.controladores.TratamientoController;
 import models.modelos.entidades.Cita;
-import models.modelos.entidades.CitaTratamiento;
 import models.modelos.entidades.Paciente;
 import models.modelos.entidades.Doctor;
-import models.modelos.entidades.Tratamiento;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-/**
- * Panel de gestión de Citas.
- * Permite crear citas asociando un paciente y un doctor,
- * e incluir tratamientos en cada cita.
- */
 public class CitaPanel extends JPanel {
 
     private CitaController citaController;
     private PacienteController pacienteController;
     private DoctorController doctorController;
-    private TratamientoController tratamientoController;
     private JTable table;
-    private DefaultTableModel tableModel;
+    private DefaultTableModel model;
     private SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
 
@@ -38,192 +26,138 @@ public class CitaPanel extends JPanel {
         citaController = new CitaController();
         pacienteController = new PacienteController();
         doctorController = new DoctorController();
-        tratamientoController = new TratamientoController();
         setLayout(new BorderLayout());
         initComponents();
         loadData();
     }
 
     private void initComponents() {
-        String[] columnas = {"ID", "Paciente", "Doctor", "Fecha", "Hora Inicio", "Hora Fin", "Estado"};
-        tableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+        String[] cols = {"ID", "Paciente", "Doctor", "Fecha", "Hora Inicio", "Hora Fin", "Estado"};
+        model = new DefaultTableModel(cols, 0) {
+            public boolean isCellEditable(int r, int c) { return false; }
         };
-        table = new JTable(tableModel);
+        table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        JButton btnNueva = new JButton("Nueva Cita");
-        JButton btnEditar = new JButton("Editar Estado");
-        JButton btnEliminar = new JButton("Eliminar");
-
-        btnNueva.addActionListener(e -> mostrarDialogo(null));
-        btnEditar.addActionListener(e -> editarCita());
-        btnEliminar.addActionListener(e -> eliminarCita());
-
-        buttonPanel.add(btnNueva);
-        buttonPanel.add(btnEditar);
-        buttonPanel.add(btnEliminar);
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel pnl = new JPanel();
+        JButton btnNew = new JButton("Nuevo");
+        JButton btnEdit = new JButton("Editar");
+        JButton btnDel = new JButton("Eliminar");
+        btnNew.addActionListener(e -> dialogo(null));
+        btnEdit.addActionListener(e -> editar());
+        btnDel.addActionListener(e -> eliminar());
+        pnl.add(btnNew);
+        pnl.add(btnEdit);
+        pnl.add(btnDel);
+        add(pnl, BorderLayout.SOUTH);
     }
 
     public void loadData() {
-        tableModel.setRowCount(0);
-        List<Cita> citas = citaController.findAll();
-        for (Cita c : citas) {
-            tableModel.addRow(new Object[]{
-                    c.getCodCita(),
-                    c.getPaciente().getNombre() + " " + c.getPaciente().getApellidos(),
-                    c.getDoctor().getNombre(),
-                    c.getFecha() != null ? sdfFecha.format(c.getFecha()) : "",
-                    c.getHoraInicio() != null ? sdfHora.format(c.getHoraInicio()) : "",
-                    c.getHoraFin() != null ? sdfHora.format(c.getHoraFin()) : "",
-                    c.getEstado()
+        model.setRowCount(0);
+        for (Cita c : citaController.findAll()) {
+            model.addRow(new Object[]{
+                c.getCodCita(),
+                c.getPaciente().getNombre() + " " + c.getPaciente().getApellidos(),
+                c.getDoctor().getNombre(),
+                c.getFecha() != null ? sdfFecha.format(c.getFecha()) : "",
+                c.getHoraInicio() != null ? sdfHora.format(c.getHoraInicio()) : "",
+                c.getHoraFin() != null ? sdfHora.format(c.getHoraFin()) : "",
+                c.getEstado()
             });
         }
     }
 
-    private void mostrarDialogo(Cita cita) {
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
+    private void dialogo(Cita cita) {
+        JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
                 cita == null ? "Nueva Cita" : "Editar Cita", true);
-        dialog.setSize(450, 450);
-        dialog.setLocationRelativeTo(this);
+        d.setSize(350, 300);
+        d.setLocationRelativeTo(this);
 
-        JPanel form = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // ComboBox de pacientes
         List<Paciente> pacientes = pacienteController.findAll();
-        JComboBox<String> cmbPaciente = new JComboBox<>();
-        for (Paciente p : pacientes) {
-            cmbPaciente.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos());
-        }
-
-        // ComboBox de doctores
         List<Doctor> doctores = doctorController.findAll();
-        JComboBox<String> cmbDoctor = new JComboBox<>();
-        for (Doctor d : doctores) {
-            cmbDoctor.addItem(d.getCodDoctor() + " - " + d.getNombre());
-        }
 
-        JTextField txtFecha = new JTextField(20);
-        JTextField txtHoraInicio = new JTextField(20);
-        JTextField txtHoraFin = new JTextField(20);
-        JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Programada", "Completada", "Cancelada"});
+        JComboBox<String> cmbPac = new JComboBox<>();
+        for (Paciente p : pacientes)
+            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos());
+
+        JComboBox<String> cmbDoc = new JComboBox<>();
+        for (Doctor doc : doctores)
+            cmbDoc.addItem(doc.getCodDoctor() + " - " + doc.getNombre());
+
+        JTextField txtFecha = new JTextField();
+        JTextField txtHoraIni = new JTextField();
+        JTextField txtHoraFin = new JTextField();
+        JComboBox<String> cmbEst = new JComboBox<>(new String[]{"Programada", "Completada", "Cancelada"});
 
         if (cita != null) {
-            // Seleccionar el paciente correcto en el combo
-            for (int i = 0; i < cmbPaciente.getItemCount(); i++) {
-                if (cmbPaciente.getItemAt(i).startsWith(String.valueOf(cita.getPaciente().getCodPaciente()))) {
-                    cmbPaciente.setSelectedIndex(i);
-                    break;
-                }
-            }
-            // Seleccionar el doctor correcto en el combo
-            for (int i = 0; i < cmbDoctor.getItemCount(); i++) {
-                if (cmbDoctor.getItemAt(i).startsWith(String.valueOf(cita.getDoctor().getCodDoctor()))) {
-                    cmbDoctor.setSelectedIndex(i);
-                    break;
-                }
-            }
+            for (int i = 0; i < cmbPac.getItemCount(); i++)
+                if (cmbPac.getItemAt(i).startsWith(String.valueOf(cita.getPaciente().getCodPaciente())))
+                    cmbPac.setSelectedIndex(i);
+            for (int i = 0; i < cmbDoc.getItemCount(); i++)
+                if (cmbDoc.getItemAt(i).startsWith(String.valueOf(cita.getDoctor().getCodDoctor())))
+                    cmbDoc.setSelectedIndex(i);
             txtFecha.setText(cita.getFecha() != null ? sdfFecha.format(cita.getFecha()) : "");
-            txtHoraInicio.setText(cita.getHoraInicio() != null ? sdfHora.format(cita.getHoraInicio()) : "");
+            txtHoraIni.setText(cita.getHoraInicio() != null ? sdfHora.format(cita.getHoraInicio()) : "");
             txtHoraFin.setText(cita.getHoraFin() != null ? sdfHora.format(cita.getHoraFin()) : "");
-            cmbEstado.setSelectedItem(cita.getEstado());
+            cmbEst.setSelectedItem(cita.getEstado());
         }
 
-        String[] labels = {"Paciente:", "Doctor:", "Fecha (dd/MM/yyyy):", "Hora Inicio (HH:mm):", "Hora Fin (HH:mm):", "Estado:"};
-        JComponent[] fields = {cmbPaciente, cmbDoctor, txtFecha, txtHoraInicio, txtHoraFin, cmbEstado};
+        JPanel form = new JPanel(new GridLayout(6, 2, 5, 5));
+        form.add(new JLabel("Paciente:")); form.add(cmbPac);
+        form.add(new JLabel("Doctor:")); form.add(cmbDoc);
+        form.add(new JLabel("Fecha (dd/MM/yyyy):")); form.add(txtFecha);
+        form.add(new JLabel("Hora Inicio (HH:mm):")); form.add(txtHoraIni);
+        form.add(new JLabel("Hora Fin (HH:mm):")); form.add(txtHoraFin);
+        form.add(new JLabel("Estado:")); form.add(cmbEst);
+        d.add(form, BorderLayout.CENTER);
 
-        for (int i = 0; i < labels.length; i++) {
-            gbc.gridx = 0;
-            gbc.gridy = i;
-            form.add(new JLabel(labels[i]), gbc);
-            gbc.gridx = 1;
-            form.add(fields[i], gbc);
-        }
-
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-
-        btnGuardar.addActionListener(e -> {
+        JPanel pnlBtn = new JPanel();
+        JButton btnOk = new JButton("Guardar");
+        JButton btnCancel = new JButton("Cancelar");
+        btnOk.addActionListener(e -> {
             try {
-                // Obtener paciente y doctor seleccionados
-                int idxPaciente = cmbPaciente.getSelectedIndex();
-                int idxDoctor = cmbDoctor.getSelectedIndex();
-                Paciente pacienteSeleccionado = pacientes.get(idxPaciente);
-                Doctor doctorSeleccionado = doctores.get(idxDoctor);
-
-                Date fecha = sdfFecha.parse(txtFecha.getText());
-                Date horaInicio = sdfHora.parse(txtHoraInicio.getText());
-                Date horaFin = sdfHora.parse(txtHoraFin.getText());
-                String estado = (String) cmbEstado.getSelectedItem();
-
+                int iPac = cmbPac.getSelectedIndex();
+                int iDoc = cmbDoc.getSelectedIndex();
                 if (cita == null) {
-                    Cita nueva = new Cita(pacienteSeleccionado, doctorSeleccionado,
-                            fecha, horaInicio, horaFin, estado);
-                    citaController.create(nueva);
+                    Cita n = new Cita(pacientes.get(iPac), doctores.get(iDoc),
+                            sdfFecha.parse(txtFecha.getText()), sdfHora.parse(txtHoraIni.getText()),
+                            sdfHora.parse(txtHoraFin.getText()), (String) cmbEst.getSelectedItem());
+                    citaController.create(n);
                 } else {
-                    cita.setPaciente(pacienteSeleccionado);
-                    cita.setDoctor(doctorSeleccionado);
-                    cita.setFecha(fecha);
-                    cita.setHoraInicio(horaInicio);
-                    cita.setHoraFin(horaFin);
-                    cita.setEstado(estado);
+                    cita.setPaciente(pacientes.get(iPac));
+                    cita.setDoctor(doctores.get(iDoc));
+                    cita.setFecha(sdfFecha.parse(txtFecha.getText()));
+                    cita.setHoraInicio(sdfHora.parse(txtHoraIni.getText()));
+                    cita.setHoraFin(sdfHora.parse(txtHoraFin.getText()));
+                    cita.setEstado((String) cmbEst.getSelectedItem());
                     citaController.update(cita);
                 }
                 loadData();
-                dialog.dispose();
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(dialog, "Formato de fecha/hora incorrecto");
+                d.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage());
             }
         });
-
-        btnCancelar.addActionListener(e -> dialog.dispose());
-
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-
-        gbc.gridx = 0;
-        gbc.gridy = labels.length;
-        gbc.gridwidth = 2;
-        form.add(panelBotones, gbc);
-
-        dialog.add(form);
-        dialog.setVisible(true);
+        btnCancel.addActionListener(e -> d.dispose());
+        pnlBtn.add(btnOk);
+        pnlBtn.add(btnCancel);
+        d.add(pnlBtn, BorderLayout.SOUTH);
+        d.setVisible(true);
     }
 
-    private void editarCita() {
+    private void editar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una cita para editar");
-            return;
-        }
-        Integer id = (Integer) tableModel.getValueAt(row, 0);
-        Cita cita = citaController.findById(id);
-        mostrarDialogo(cita);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }
+        dialogo(citaController.findById((Integer) model.getValueAt(row, 0)));
     }
 
-    private void eliminarCita() {
+    private void eliminar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una cita para eliminar");
-            return;
-        }
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar esta cita?",
-                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            Integer id = (Integer) tableModel.getValueAt(row, 0);
-            citaController.delete(id);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }
+        if (JOptionPane.showConfirmDialog(this, "Eliminar cita?", "Confirmar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            citaController.delete((Integer) model.getValueAt(row, 0));
             loadData();
         }
     }

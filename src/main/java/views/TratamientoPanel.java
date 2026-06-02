@@ -2,20 +2,16 @@ package views;
 
 import controllers.controladores.TratamientoController;
 import models.modelos.entidades.Tratamiento;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Panel de gestión de Tratamientos.
- */
 public class TratamientoPanel extends JPanel {
 
     private TratamientoController controller;
     private JTable table;
-    private DefaultTableModel tableModel;
+    private DefaultTableModel model;
 
     public TratamientoPanel() {
         controller = new TratamientoController();
@@ -25,145 +21,102 @@ public class TratamientoPanel extends JPanel {
     }
 
     private void initComponents() {
-        String[] columnas = {"ID", "Nombre", "Descripción", "Precio (€)", "Duración (min)"};
-        tableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+        String[] cols = {"ID", "Nombre", "Descripcion", "Precio (€)", "Duracion (min)"};
+        model = new DefaultTableModel(cols, 0) {
+            public boolean isCellEditable(int r, int c) { return false; }
         };
-        table = new JTable(tableModel);
+        table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        JButton btnNuevo = new JButton("Nuevo Tratamiento");
-        JButton btnEditar = new JButton("Editar");
-        JButton btnEliminar = new JButton("Eliminar");
-
-        btnNuevo.addActionListener(e -> mostrarDialogo(null));
-        btnEditar.addActionListener(e -> editarTratamiento());
-        btnEliminar.addActionListener(e -> eliminarTratamiento());
-
-        buttonPanel.add(btnNuevo);
-        buttonPanel.add(btnEditar);
-        buttonPanel.add(btnEliminar);
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel pnl = new JPanel();
+        JButton btnNew = new JButton("Nuevo");
+        JButton btnEdit = new JButton("Editar");
+        JButton btnDel = new JButton("Eliminar");
+        btnNew.addActionListener(e -> dialogo(null));
+        btnEdit.addActionListener(e -> editar());
+        btnDel.addActionListener(e -> eliminar());
+        pnl.add(btnNew);
+        pnl.add(btnEdit);
+        pnl.add(btnDel);
+        add(pnl, BorderLayout.SOUTH);
     }
 
     public void loadData() {
-        tableModel.setRowCount(0);
-        List<Tratamiento> tratamientos = controller.findAll();
-        for (Tratamiento t : tratamientos) {
-            tableModel.addRow(new Object[]{
-                    t.getCodTratamiento(),
-                    t.getNombreTratamiento(),
-                    t.getDescripcion(),
-                    t.getPrecioEstimado(),
-                    t.getDuracionMinutos()
+        model.setRowCount(0);
+        for (Tratamiento t : controller.findAll()) {
+            model.addRow(new Object[]{
+                t.getCodTratamiento(), t.getNombreTratamiento(), t.getDescripcion(),
+                t.getPrecioEstimado(), t.getDuracionMinutos()
             });
         }
     }
 
-    private void mostrarDialogo(Tratamiento tratamiento) {
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
+    private void dialogo(Tratamiento tratamiento) {
+        JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
                 tratamiento == null ? "Nuevo Tratamiento" : "Editar Tratamiento", true);
-        dialog.setSize(450, 350);
-        dialog.setLocationRelativeTo(this);
+        d.setSize(350, 250);
+        d.setLocationRelativeTo(this);
 
-        JPanel form = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JTextField txtNombre = new JTextField(20);
-        JTextField txtDescripcion = new JTextField(20);
-        JTextField txtPrecio = new JTextField(20);
-        JTextField txtDuracion = new JTextField(20);
+        JPanel form = new JPanel(new GridLayout(4, 2, 5, 5));
+        JTextField txtNom = new JTextField();
+        JTextField txtDesc = new JTextField();
+        JTextField txtPre = new JTextField();
+        JTextField txtDur = new JTextField();
 
         if (tratamiento != null) {
-            txtNombre.setText(tratamiento.getNombreTratamiento());
-            txtDescripcion.setText(tratamiento.getDescripcion());
-            txtPrecio.setText(String.valueOf(tratamiento.getPrecioEstimado()));
-            txtDuracion.setText(String.valueOf(tratamiento.getDuracionMinutos()));
+            txtNom.setText(tratamiento.getNombreTratamiento());
+            txtDesc.setText(tratamiento.getDescripcion());
+            txtPre.setText(String.valueOf(tratamiento.getPrecioEstimado()));
+            txtDur.setText(String.valueOf(tratamiento.getDuracionMinutos()));
         }
 
-        String[] labels = {"Nombre:", "Descripción:", "Precio (€):", "Duración (min):"};
-        JTextField[] fields = {txtNombre, txtDescripcion, txtPrecio, txtDuracion};
+        form.add(new JLabel("Nombre:")); form.add(txtNom);
+        form.add(new JLabel("Descripcion:")); form.add(txtDesc);
+        form.add(new JLabel("Precio (€):")); form.add(txtPre);
+        form.add(new JLabel("Duracion (min):")); form.add(txtDur);
+        d.add(form, BorderLayout.CENTER);
 
-        for (int i = 0; i < labels.length; i++) {
-            gbc.gridx = 0;
-            gbc.gridy = i;
-            form.add(new JLabel(labels[i]), gbc);
-            gbc.gridx = 1;
-            form.add(fields[i], gbc);
-        }
-
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-
-        btnGuardar.addActionListener(e -> {
+        JPanel pnlBtn = new JPanel();
+        JButton btnOk = new JButton("Guardar");
+        JButton btnCancel = new JButton("Cancelar");
+        btnOk.addActionListener(e -> {
             try {
-                Double precio = Double.parseDouble(txtPrecio.getText());
-                Integer duracion = Integer.parseInt(txtDuracion.getText());
-
                 if (tratamiento == null) {
-                    Tratamiento nuevo = new Tratamiento(txtNombre.getText(), txtDescripcion.getText(),
-                            precio, duracion);
-                    controller.create(nuevo);
+                    controller.create(new Tratamiento(txtNom.getText(), txtDesc.getText(),
+                            Double.parseDouble(txtPre.getText()), Integer.parseInt(txtDur.getText())));
                 } else {
-                    tratamiento.setNombreTratamiento(txtNombre.getText());
-                    tratamiento.setDescripcion(txtDescripcion.getText());
-                    tratamiento.setPrecioEstimado(precio);
-                    tratamiento.setDuracionMinutos(duracion);
+                    tratamiento.setNombreTratamiento(txtNom.getText());
+                    tratamiento.setDescripcion(txtDesc.getText());
+                    tratamiento.setPrecioEstimado(Double.parseDouble(txtPre.getText()));
+                    tratamiento.setDuracionMinutos(Integer.parseInt(txtDur.getText()));
                     controller.update(tratamiento);
                 }
                 loadData();
-                dialog.dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(dialog, "Precio y duración deben ser números");
+                d.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage());
             }
         });
-
-        btnCancelar.addActionListener(e -> dialog.dispose());
-
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-
-        gbc.gridx = 0;
-        gbc.gridy = labels.length;
-        gbc.gridwidth = 2;
-        form.add(panelBotones, gbc);
-
-        dialog.add(form);
-        dialog.setVisible(true);
+        btnCancel.addActionListener(e -> d.dispose());
+        pnlBtn.add(btnOk);
+        pnlBtn.add(btnCancel);
+        d.add(pnlBtn, BorderLayout.SOUTH);
+        d.setVisible(true);
     }
 
-    private void editarTratamiento() {
+    private void editar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un tratamiento para editar");
-            return;
-        }
-        Integer id = (Integer) tableModel.getValueAt(row, 0);
-        Tratamiento tratamiento = controller.findById(id);
-        mostrarDialogo(tratamiento);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un tratamiento"); return; }
+        dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
-    private void eliminarTratamiento() {
+    private void eliminar() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un tratamiento para eliminar");
-            return;
-        }
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar este tratamiento?",
-                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            Integer id = (Integer) tableModel.getValueAt(row, 0);
-            controller.delete(id);
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un tratamiento"); return; }
+        if (JOptionPane.showConfirmDialog(this, "Eliminar tratamiento?", "Confirmar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            controller.delete((Integer) model.getValueAt(row, 0));
             loadData();
         }
     }
