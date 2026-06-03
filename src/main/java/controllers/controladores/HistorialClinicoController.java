@@ -2,17 +2,17 @@ package controllers.controladores;
 
 import java.util.List; // Importa List para retornar colecciones
 
-import javax.persistence.EntityManager; // Gestiona la conexión con la BD
+import javax.persistence.EntityManager; // Gestiona la conexiÃƒÂ³n con la BD
 import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
 import javax.persistence.EntityTransaction; // Controla las transacciones
-import util.SharedEntityManagerFactory; // Factoría compartida de EntityManager
+import util.SharedEntityManagerFactory; // FactorÃƒÂ­a compartida de EntityManager
 
 import models.modelos.entidades.HistorialClinico; // Importa la entidad HistorialClinico
 
 /**
  * Controlador CRUD para la entidad HistorialClinico.
- * El historial clínico se crea automáticamente junto con el paciente
- * gracias a cascade = CascadeType.ALL en la relación, pero este controlador
+ * El historial clÃƒÂ­nico se crea automÃƒÂ¡ticamente junto con el paciente
+ * gracias a cascade = CascadeType.ALL en la relaciÃƒÂ³n, pero este controlador
  * proporciona operaciones directas si se necesitan modificaciones independientes.
  */
 public class HistorialClinicoController {
@@ -25,13 +25,13 @@ public class HistorialClinicoController {
         this.emf = SharedEntityManagerFactory.getInstance();
     }
 
-    // Método auxiliar: crea un nuevo EntityManager para comunicarse con la BD
+    // MÃƒÂ©todo auxiliar: crea un nuevo EntityManager para comunicarse con la BD
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
     /**
-     * CREATE - Inserta un nuevo historial clínico en la base de datos.
+     * CREATE - Inserta un nuevo historial clÃƒÂ­nico en la base de datos.
      * @param historialClinico El historial a crear
      */
     public void create(HistorialClinico historialClinico) {
@@ -45,7 +45,7 @@ public class HistorialClinicoController {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new RuntimeException("Error al crear el historial clínico", ex);
+            throw new RuntimeException("Error al crear el historial clÃƒÂ­nico", ex);
         } finally {
             em.close();
         }
@@ -62,12 +62,12 @@ public class HistorialClinicoController {
             // Busca el historial en la BD por su clave primaria
             return em.find(HistorialClinico.class, id);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
     /**
-     * READ - Obtiene todos los historiales clínicos de la base de datos.
+     * READ - Obtiene todos los historiales clÃƒÂ­nicos de la base de datos.
      * @return Lista de todos los historiales
      */
     public List<HistorialClinico> findAll() {
@@ -76,7 +76,7 @@ public class HistorialClinicoController {
             // Ejecuta la NamedQuery "HistorialClinico.findAll" definida en la entidad
             return em.createNamedQuery("HistorialClinico.findAll", HistorialClinico.class).getResultList();
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -86,19 +86,19 @@ public class HistorialClinicoController {
      */
     public void update(HistorialClinico historialClinico) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
             em.merge(historialClinico); // Actualiza el registro en la BD
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
-            throw new RuntimeException("Error al actualizar el historial clínico", ex);
+            throw new RuntimeException("Error al actualizar el historial clÃƒÂ­nico", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -108,47 +108,47 @@ public class HistorialClinicoController {
      */
     public void delete(Integer id) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
             HistorialClinico historialClinico = em.find(HistorialClinico.class, id); // Busca el historial
             if (historialClinico != null) {
                 em.remove(historialClinico); // Elimina el registro de la BD
             }
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
-            throw new RuntimeException("Error al eliminar el historial clínico", ex);
+            throw new RuntimeException("Error al eliminar el historial clÃƒÂ­nico", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
     /**
-     * DELETE ALL - Elimina todos los historiales clínicos.
+     * DELETE ALL - Elimina todos los historiales clÃƒÂ­nicos.
      * Finalmente reinicia el AUTO_INCREMENT de la tabla.
      */
     public void deleteAll() {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
-            // Elimina todos los historiales clínicos
+            tx.begin(); // Inicia la transacciÃƒÂ³n
+            // Elimina todos los historiales clÃƒÂ­nicos
             em.createNativeQuery("DELETE FROM Historial_Clinico").executeUpdate();
             // Reinicia el AUTO_INCREMENT a 1
             em.createNativeQuery("ALTER TABLE clinica_dental.Historial_Clinico AUTO_INCREMENT = 1").executeUpdate();
             tx.commit(); // Confirma todos los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace todos los cambios
             }
-            throw new RuntimeException("Error al eliminar todos los historiales clínicos", ex);
+            throw new RuntimeException("Error al eliminar todos los historiales clÃƒÂ­nicos", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 

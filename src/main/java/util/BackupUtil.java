@@ -32,7 +32,7 @@ public class BackupUtil {
     // Formato de fecha y hora para los nombres de las carpetas de backup
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
-    // Definición de todas las tablas y sus columnas a respaldar
+    // DefiniciÃƒÂ³n de todas las tablas y sus columnas a respaldar
     // Cada fila es: {nombre_tabla, columna1, columna2, ...}
     private static final String[][] TABLAS = {
         {"Paciente",              "codPaciente", "DNI", "Nombre", "Apellidos", "Fecha_Nacimiento", "telefono", "email", "direccion"},
@@ -69,7 +69,7 @@ public class BackupUtil {
                 // Escribe la cabecera del CSV (nombres de columnas sin el nombre de la tabla)
                 String header = String.join(",", columnasSinNombreTabla(tablaInfo));
                 writer.write(header);
-                writer.newLine(); // Salto de línea
+                writer.newLine(); // Salto de lÃƒÂ­nea
 
                 // Ejecuta un SELECT * en la tabla para obtener todos los datos
                 List<Object[]> rows = em.createNativeQuery("SELECT * FROM " + nombreTabla).getResultList();
@@ -83,7 +83,7 @@ public class BackupUtil {
                     }
                     // Escribe la fila en el CSV
                     writer.write(String.join(",", values));
-                    writer.newLine(); // Salto de línea
+                    writer.newLine(); // Salto de lÃƒÂ­nea
                 }
             }
         }
@@ -92,38 +92,38 @@ public class BackupUtil {
     }
 
     /**
-     * Restaura la última copia de seguridad disponible.
-     * Elimina todos los datos actuales y restaura desde el backup más reciente.
+     * Restaura la ÃƒÂºltima copia de seguridad disponible.
+     * Elimina todos los datos actuales y restaura desde el backup mÃƒÂ¡s reciente.
      */
     public static void restaurarUltimaCopia() throws Exception {
-        Path backupRoot = Paths.get(BACKUP_ROOT); // Obtiene la ruta raíz de backups
+        Path backupRoot = Paths.get(BACKUP_ROOT); // Obtiene la ruta raÃƒÂ­z de backups
         if (!Files.exists(backupRoot)) {
             throw new RuntimeException("No hay copias de seguridad disponibles");
         }
 
-        // Busca el directorio más reciente (por nombre de archivo)
+        // Busca el directorio mÃƒÂ¡s reciente (por nombre de archivo)
         Optional<Path> latest;
         try (var dirStream = Files.list(backupRoot)) {
             latest = dirStream
                 .filter(Files::isDirectory) // Solo directorios
-                .max(Comparator.comparing(p -> p.getFileName().toString())); // El último por orden alfabético
+                .max(Comparator.comparing(p -> p.getFileName().toString())); // El ÃƒÂºltimo por orden alfabÃƒÂ©tico
         }
 
         if (latest.isEmpty()) {
             throw new RuntimeException("No hay copias de seguridad disponibles");
         }
 
-        Path backupDir = latest.get(); // Obtiene la ruta del backup más reciente
+        Path backupDir = latest.get(); // Obtiene la ruta del backup mÃƒÂ¡s reciente
 
-        // Obtiene el EntityManager y la transacción
+        // Obtiene el EntityManager y la transacciÃƒÂ³n
         EntityManagerFactory emf = SharedEntityManagerFactory.getInstance();
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
 
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
 
-            // Desactiva las restricciones de claves foráneas para poder limpiar sin conflictos
+            // Desactiva las restricciones de claves forÃƒÂ¡neas para poder limpiar sin conflictos
             em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
 
             // Elimina todos los datos de todas las tablas
@@ -142,7 +142,7 @@ public class BackupUtil {
 
                 // Lee los datos del CSV
                 List<String[]> data = leerCSV(csvFile);
-                if (data.isEmpty() || data.size() < 2) continue; // Si está vacío, salta
+                if (data.isEmpty() || data.size() < 2) continue; // Si estÃƒÂ¡ vacÃƒÂ­o, salta
 
                 String[] columnas = data.get(0); // Primera fila: nombres de columnas
                 long totalFilas = 0;
@@ -160,7 +160,7 @@ public class BackupUtil {
                     for (int c = 0; c < valores.length; c++) {
                         if (c > 0) sql.append(",");
                         if (valores[c] == null || valores[c].isEmpty()) {
-                            sql.append("NULL"); // Si está vacío, inserta NULL
+                            sql.append("NULL"); // Si estÃƒÂ¡ vacÃƒÂ­o, inserta NULL
                         } else {
                             // Escapa las comillas internas
                             sql.append("'").append(valores[c].replace("'", "''")).append("'");
@@ -174,16 +174,16 @@ public class BackupUtil {
                 }
             }
 
-            // Reactiva las restricciones de claves foráneas
+            // Reactiva las restricciones de claves forÃƒÂ¡neas
             em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
 
-            tx.commit(); // Confirma la transacción
+            tx.commit(); // Confirma la transacciÃƒÂ³n
 
-            // Limpiar caché L2 de EclipseLink para que las próximas consultas
-            // obtengan los datos reales de la BD y no objetos antiguos en caché
+            // Limpiar cachÃƒÂ© L2 de EclipseLink para que las prÃƒÂ³ximas consultas
+            // obtengan los datos reales de la BD y no objetos antiguos en cachÃƒÂ©
             emf.getCache().evictAll();
         } catch (Exception ex) {
-            // Si hay error, revierte la transacción
+            // Si hay error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) tx.rollback();
             try {
                 // Intenta reactivar las FK aunque haya error
@@ -196,7 +196,7 @@ public class BackupUtil {
     }
 
     /**
-     * Método auxiliar: obtiene las columnas sin el nombre de la tabla.
+     * MÃƒÂ©todo auxiliar: obtiene las columnas sin el nombre de la tabla.
      * Usado para los encabezados del CSV.
      */
     private static String[] columnasSinNombreTabla(String[] tablaInfo) {
@@ -208,7 +208,7 @@ public class BackupUtil {
 
     /**
      * Escapa caracteres especiales para cumplir con el formato CSV.
-     * Si el valor contiene comas, comillas o saltos de línea, lo envuelve en comillas.
+     * Si el valor contiene comas, comillas o saltos de lÃƒÂ­nea, lo envuelve en comillas.
      */
     private static String escaparCSV(String value) {
         if (value == null) return "";
@@ -227,10 +227,10 @@ public class BackupUtil {
         // Abre el archivo para lectura
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             String line;
-            // Lee línea por línea
+            // Lee lÃƒÂ­nea por lÃƒÂ­nea
             while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue; // Salta líneas vacías
-                // Parsea la línea y agrega a la lista
+                if (line.isBlank()) continue; // Salta lÃƒÂ­neas vacÃƒÂ­as
+                // Parsea la lÃƒÂ­nea y agrega a la lista
                 data.add(parsearLineaCSV(line));
             }
         }
@@ -238,7 +238,7 @@ public class BackupUtil {
     }
 
     /**
-     * Parsea una línea CSV respetando las comillas.
+     * Parsea una lÃƒÂ­nea CSV respetando las comillas.
      * Maneja correctamente valores con comas dentro de comillas.
      */
     private static String[] parsearLineaCSV(String line) {
@@ -246,7 +246,7 @@ public class BackupUtil {
         boolean inQuotes = false; // Flag para rastrear si estamos dentro de comillas
         StringBuilder current = new StringBuilder();
 
-        // Procesa cada carácter de la línea
+        // Procesa cada carÃƒÂ¡cter de la lÃƒÂ­nea
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
 
@@ -265,11 +265,11 @@ public class BackupUtil {
                 fields.add(current.toString().trim()); // Agrega el campo
                 current = new StringBuilder(); // Reinicia el campo
             } else {
-                // Cualquier otro carácter se agrega al campo actual
+                // Cualquier otro carÃƒÂ¡cter se agrega al campo actual
                 current.append(c);
             }
         }
-        // Agrega el último campo
+        // Agrega el ÃƒÂºltimo campo
         fields.add(current.toString().trim());
 
         return fields.toArray(new String[0]); // Retorna como array

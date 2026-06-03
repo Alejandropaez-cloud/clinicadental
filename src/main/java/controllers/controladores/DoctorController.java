@@ -2,17 +2,17 @@ package controllers.controladores;
 
 import java.util.List; // Importa List para retornar colecciones
 
-import javax.persistence.EntityManager; // Gestiona la conexión con la BD
+import javax.persistence.EntityManager; // Gestiona la conexiÃƒÂ³n con la BD
 import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
 import javax.persistence.EntityTransaction; // Controla las transacciones
-import util.SharedEntityManagerFactory; // Factoría compartida de EntityManager
+import util.SharedEntityManagerFactory; // FactorÃƒÂ­a compartida de EntityManager
 
 import models.modelos.entidades.Doctor; // Importa la entidad Doctor
 
 /**
- * Controlador CRUD para la entidad Doctor (Médico/Odontólogo).
+ * Controlador CRUD para la entidad Doctor (MÃƒÂ©dico/OdontÃƒÂ³logo).
  * Implementa operaciones Create, Read, Update, Delete sobre doctores.
- * Sigue el mismo patrón que PacienteController para mantener consistencia.
+ * Sigue el mismo patrÃƒÂ³n que PacienteController para mantener consistencia.
  */
 public class DoctorController {
 
@@ -24,7 +24,7 @@ public class DoctorController {
         this.emf = SharedEntityManagerFactory.getInstance();
     }
 
-    // Método auxiliar: crea un nuevo EntityManager para comunicarse con la BD
+    // MÃƒÂ©todo auxiliar: crea un nuevo EntityManager para comunicarse con la BD
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
@@ -61,7 +61,7 @@ public class DoctorController {
             // Busca el doctor en la BD por su clave primaria
             return em.find(Doctor.class, id);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -75,7 +75,7 @@ public class DoctorController {
             // Ejecuta la NamedQuery "Doctor.findAll" definida en la entidad
             return em.createNamedQuery("Doctor.findAll", Doctor.class).getResultList();
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -85,19 +85,19 @@ public class DoctorController {
      */
     public void update(Doctor doctor) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
             em.merge(doctor); // Actualiza el registro en la BD (UPDATE)
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
             throw new RuntimeException("Error al actualizar el doctor", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -107,22 +107,22 @@ public class DoctorController {
      */
     public void delete(Integer id) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
             Doctor doctor = em.find(Doctor.class, id); // Busca el doctor
             if (doctor != null) {
                 em.remove(doctor); // Elimina el registro de la BD (DELETE)
             }
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
             throw new RuntimeException("Error al eliminar el doctor", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 
@@ -133,9 +133,9 @@ public class DoctorController {
      */
     public void deleteAll() {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacciÃƒÂ³n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacciÃƒÂ³n
             // Primero elimina las citas (tienen FK a Doctor)
             em.createNativeQuery("DELETE FROM Cita").executeUpdate();
             // Luego elimina los doctores
@@ -144,13 +144,13 @@ public class DoctorController {
             em.createNativeQuery("ALTER TABLE clinica_dental.Doctor AUTO_INCREMENT = 1").executeUpdate();
             tx.commit(); // Confirma todos los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacciÃƒÂ³n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace todos los cambios
             }
             throw new RuntimeException("Error al eliminar todos los doctores", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexiÃƒÂ³n
         }
     }
 

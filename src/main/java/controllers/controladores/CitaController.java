@@ -5,7 +5,7 @@ import java.util.List; // Importa List para retornar colecciones
 import javax.persistence.EntityManager; // Gestiona la conexión con la BD
 import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
 import javax.persistence.EntityTransaction; // Controla las transacciones
-import util.SharedEntityManagerFactory; // Factoría compartida de EntityManager
+import util.SharedEntityManagerFactory; // Factorí­a compartida de EntityManager
 
 import models.modelos.entidades.Cita; // Importa la entidad Cita
 
@@ -25,7 +25,7 @@ public class CitaController {
         this.emf = SharedEntityManagerFactory.getInstance();
     }
 
-    // Método auxiliar: crea un nuevo EntityManager para comunicarse con la BD
+    // MÃƒÂ©todo auxiliar: crea un nuevo EntityManager para comunicarse con la BD
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
@@ -33,7 +33,7 @@ public class CitaController {
     /**
      * CREATE - Inserta una nueva cita en la base de datos.
      * Al persistir una Cita, si tiene CitaTratamiento asociados con
-     * cascade PERSIST, también se guardarán automáticamente.
+     * cascade PERSIST, también se guardaron automáticamente.
      * @param cita La cita a crear
      */
     public void create(Cita cita) {

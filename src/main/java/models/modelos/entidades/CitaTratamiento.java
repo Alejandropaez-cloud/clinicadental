@@ -20,14 +20,14 @@ import javax.persistence.TemporalType;
 /**
  * Entidad que representa la tabla intermedia Cita_Tratamiento.
  * 
- * En una relación N:M entre Cita y Tratamiento, necesitamos una tabla intermedia
- * (tabla puente) que almacene qué tratamientos se realizan en cada cita.
+ * En una relaciÃƒÂ³n N:M entre Cita y Tratamiento, necesitamos una tabla intermedia
+ * (tabla puente) que almacene quÃƒÂ© tratamientos se realizan en cada cita.
  * 
  * Siguiendo la directriz JPA, esta entidad tiene su propio @Id con
  * @GeneratedValue(strategy = GenerationType.IDENTITY), en lugar de una
  * clave compuesta con @IdClass.
  * 
- * Además, tiene dos @ManyToOne con @JoinColumn hacia Cita y Tratamiento,
+ * AdemÃƒÂ¡s, tiene dos @ManyToOne con @JoinColumn hacia Cita y Tratamiento,
  * permitiendo agregar atributos adicionales como Cantidad y FechaRegistro.
  */
 @Entity
@@ -40,24 +40,24 @@ import javax.persistence.TemporalType;
 })
 public class CitaTratamiento implements Serializable {
 
-    // ID único de serialización usado para persistencia
+    // ID ÃƒÂºnico de serializaciÃƒÂ³n usado para persistencia
     private static final long serialVersionUID = 1L;
 
     // Clave primaria autoincrementada de la tabla Cita_Tratamiento
     @Id // Marca como clave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automáticamente el valor
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automÃƒÂ¡ticamente el valor
     @Basic(optional = false) // Campo obligatorio
     @Column(name = "id") // Nombre de la columna en la BD
     private Integer id;
 
-    // Relación ManyToOne con Cita (muchos CitaTratamiento pueden pertenecer a una Cita)
-    @ManyToOne(optional = false) // Relación obligatoria: todo CitaTratamiento necesita una Cita
-    @JoinColumn(name = "codCita", referencedColumnName = "codCita") // Define la clave foránea
+    // RelaciÃƒÂ³n ManyToOne con Cita (muchos CitaTratamiento pueden pertenecer a una Cita)
+    @ManyToOne(optional = false) // RelaciÃƒÂ³n obligatoria: todo CitaTratamiento necesita una Cita
+    @JoinColumn(name = "codCita", referencedColumnName = "codCita") // Define la clave forÃƒÂ¡nea
     private Cita cita;
 
-    // Relación ManyToOne con Tratamiento (muchos CitaTratamiento pueden referenciarse a un Tratamiento)
-    @ManyToOne(optional = false) // Relación obligatoria: todo CitaTratamiento necesita un Tratamiento
-    @JoinColumn(name = "codTratamiento", referencedColumnName = "codTratamiento") // Define la clave foránea
+    // RelaciÃƒÂ³n ManyToOne con Tratamiento (muchos CitaTratamiento pueden referenciarse a un Tratamiento)
+    @ManyToOne(optional = false) // RelaciÃƒÂ³n obligatoria: todo CitaTratamiento necesita un Tratamiento
+    @JoinColumn(name = "codTratamiento", referencedColumnName = "codTratamiento") // Define la clave forÃƒÂ¡nea
     private Tratamiento tratamiento;
 
     // Cantidad de unidades de este tratamiento a realizar en la cita
@@ -70,16 +70,16 @@ public class CitaTratamiento implements Serializable {
     @Temporal(TemporalType.TIMESTAMP) // Mapea a TIMESTAMP en MySQL
     private Date fechaRegistro;
 
-    // Constructor vacío requerido por JPA
+    // Constructor vacÃƒÂ­o requerido por JPA
     public CitaTratamiento() {
     }
 
-    // Constructor con solo el ID (usado para búsquedas)
+    // Constructor con solo el ID (usado para bÃƒÂºsquedas)
     public CitaTratamiento(Integer id) {
         this.id = id; // Asigna el ID
     }
 
-    // Constructor con parámetros (usado al crear un nuevo CitaTratamiento)
+    // Constructor con parÃƒÂ¡metros (usado al crear un nuevo CitaTratamiento)
     public CitaTratamiento(Cita cita, Tratamiento tratamiento, Integer cantidad) {
         this.cita = cita; // Asigna la cita
         this.tratamiento = tratamiento; // Asigna el tratamiento
@@ -137,11 +137,11 @@ public class CitaTratamiento implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    // Calcula el código hash basado en el ID del registro
+    // Calcula el cÃƒÂ³digo hash basado en el ID del registro
     @Override
     public int hashCode() {
         int hash = 0; // Inicializa el hash
-        // Si el ID no es nulo, suma su código hash
+        // Si el ID no es nulo, suma su cÃƒÂ³digo hash
         hash += (id != null ? id.hashCode() : 0);
         return hash; // Retorna el hash calculado
     }
@@ -158,7 +158,7 @@ public class CitaTratamiento implements Serializable {
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
-    // Retorna una representación en texto del CitaTratamiento
+    // Retorna una representaciÃƒÂ³n en texto del CitaTratamiento
     @Override
     public String toString() {
         // Retorna una cadena con los datos principales del CitaTratamiento

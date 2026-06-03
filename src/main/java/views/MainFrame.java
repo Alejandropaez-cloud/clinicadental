@@ -1,9 +1,9 @@
 package views;
 
 import util.BackupUtil; // Importa utilidades de copia de seguridad
-import javax.swing.*; // Importa componentes gráficos Swing
-import javax.swing.border.EmptyBorder; // Importa para bordes vacíos
-import java.awt.*; // Importa clases de diseño gráfico
+import javax.swing.*; // Importa componentes grÃƒÂ¡ficos Swing
+import javax.swing.border.EmptyBorder; // Importa para bordes vacÃƒÂ­os
+import java.awt.*; // Importa clases de diseÃƒÂ±o grÃƒÂ¡fico
 
 /**
  * Ventana principal de la aplicación.
@@ -12,98 +12,87 @@ import java.awt.*; // Importa clases de diseño gráfico
  */
 public class MainFrame extends JFrame {
 
-    // Paneles para cada sección de la aplicación
     private final PacientePanel pnlPaciente = new PacientePanel(); // Panel para gestionar pacientes
     private final DoctorPanel pnlDoctor = new DoctorPanel(); // Panel para gestionar doctores
     private final CitaPanel pnlCita = new CitaPanel(); // Panel para gestionar citas
     private final TratamientoPanel pnlTratamiento = new TratamientoPanel(); // Panel para gestionar tratamientos
-    private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel(); // Panel para gestionar historiales
-    private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel(); // Panel para gestionar relaciones cita-tratamiento
-    
-    // CardLayout permite cambiar entre paneles de forma eficiente
-    private final CardLayout cardLayout = new CardLayout();
-    private final JPanel panelCentral = new JPanel(cardLayout); // Panel central que cambia entre vistas
+    private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel(); // Panel para gestionar historiales clÃƒÂ­nicos
+    private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel(); // Panel para gestionar la relación cita-tratamiento
 
-    // Colores de la aplicación (tema azul y blanco)
-    private Color azul = new Color(33, 150, 243); // Azul claro para header
-    private Color azulOscuro = new Color(25, 118, 210); // Azul oscuro para botones
-    private Color blanco = Color.WHITE; // Blanco
-    private Color fondo = new Color(240, 245, 250); // Azul muy claro para fondo
+    private final CardLayout cardLayout = new CardLayout(); // Layout para cambiar entre paneles
+    private final JPanel panelCentral = new JPanel(cardLayout); // Panel central que contiene todas las vistas
 
-    // Constructor: inicializa la interfaz gráfica
+    private Color azul = new Color(33, 150, 243); // Color azul principal
+    private Color azulOscuro = new Color(25, 118, 210); // Color azul oscuro para botones
+    private Color blanco = Color.WHITE; // Color blanco para texto y fondos claros
+    private Color fondo = new Color(240, 245, 250); // Color de fondo suave
+
+    /**
+     * Constructor de la ventana principal.
+     * Configura la ventana, crea la navegación y agrega los paneles de cada módulo.
+     */
     public MainFrame() {
-        setTitle("Clinica Dental"); // Título de la ventana
-        setSize(950, 600); // Tamaño inicial
+        setTitle("Clinica Dental"); // Tí­tulo de la ventana
+        setSize(950, 600); // Tamaño de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Cierra la aplicación al cerrar la ventana
-        setLocationRelativeTo(null); // Centra la ventana en la pantalla
-        getContentPane().setBackground(fondo); // Establece color de fondo
+        setLocationRelativeTo(null); // Centra la ventana en pantalla
+        getContentPane().setBackground(fondo); // Establece el color de fondo del contenedor principal
 
-        panelCentral.setBackground(fondo); // Fondo del panel central
+        panelCentral.setBackground(fondo); // Establece el color de fondo del panel central
 
-        // Agrega todos los paneles al CardLayout con su clave identificadora
-        panelCentral.add(pnlPaciente, "Pacientes");
-        panelCentral.add(pnlDoctor, "Doctores");
-        panelCentral.add(pnlCita, "Citas");
-        panelCentral.add(pnlTratamiento, "Tratamientos");
-        panelCentral.add(pnlHistorial, "Historial");
-        panelCentral.add(pnlCitaTratamiento, "CitaTratamiento");
+        panelCentral.add(pnlPaciente, "Pacientes"); // Agrega el panel de pacientes
+        panelCentral.add(pnlDoctor, "Doctores"); // Agrega el panel de doctores
+        panelCentral.add(pnlCita, "Citas"); // Agrega el panel de citas
+        panelCentral.add(pnlTratamiento, "Tratamientos"); // Agrega el panel de tratamientos
+        panelCentral.add(pnlHistorial, "Historial"); // Agrega el panel de historial clí­nico
+        panelCentral.add(pnlCitaTratamiento, "CitaTratamiento"); // Agrega el panel de relación cita-tratamiento
 
-        // Crea el panel de navegación izquierdo con 6 botones en una columna
-        JPanel nav = new JPanel(new GridLayout(6, 1, 5, 12)); // 6 filas, 1 columna, 5px horizontal, 12px vertical
-        nav.setBackground(azul); // Fondo azul
-        nav.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // Márgenes internos
-        
-        // Nombres de los botones
-        String[] names = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "Cita-Tratamiento"};
-        // Claves de los paneles en el CardLayout (deben coincidir con las añadidas arriba)
-        String[] keys = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "CitaTratamiento"};
-        
-        // Crea un botón para cada sección
+        JPanel nav = new JPanel(new GridLayout(6, 1, 5, 12)); // Panel de navegación con 6 filas y 1 columna
+        nav.setBackground(azul); // Fondo azul para navegaciÃƒÂ³n
+        nav.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // Margen interno del panel de navegación
+
+        String[] names = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "Cita-Tratamiento"}; // Texto de botones
+        String[] keys = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "CitaTratamiento"}; // Claves para CardLayout
+
         for (int i = 0; i < names.length; i++) {
-            JButton btn = new JButton(names[i]); // Crea el botón con su nombre
-            btn.setBackground(azulOscuro); // Fondo azul oscuro
-            btn.setForeground(blanco); // Texto blanco
-            btn.setFont(btn.getFont().deriveFont(Font.BOLD, 14f)); // Fuente: negrita, tamaño 14
-            btn.setFocusPainted(false); // No muestra borde de enfoque
-            btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Márgenes internos del botón
-            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cursor de mano
-            
-            String key = keys[i]; // Obtiene la clave del panel
-            // Al hacer clic, muestra el panel correspondiente en el CardLayout
-            btn.addActionListener(e -> cardLayout.show(panelCentral, key));
-            nav.add(btn); // Añade el botón al panel de navegación
+            JButton btn = new JButton(names[i]); // Crea botón de navegación
+            btn.setBackground(azulOscuro); // Establece color de fondo
+            btn.setForeground(blanco); // Establece color de texto
+            btn.setFont(btn.getFont().deriveFont(Font.BOLD, 14f)); // Fuente en negrita tamaño 14
+            btn.setFocusPainted(false); // Deshabilita el efecto de enfoque
+            btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno del botón
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a mano
+
+            String key = keys[i]; // Clave asociada al panel
+            btn.addActionListener(e -> cardLayout.show(panelCentral, key)); // Muestra el panel correspondiente al pulsar
+            nav.add(btn); // AÃƒÂ±ade el botón al panel de navegación
         }
 
-        // Crea el panel inferior con botones de acciones globales
-        JPanel bottom = new JPanel();
+        JPanel bottom = new JPanel(); // Panel inferior para acciones globales
         bottom.setBackground(blanco); // Fondo blanco
         bottom.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(2, 0, 0, 0, azul), // Borde superior azul
-            new EmptyBorder(8, 8, 8, 8) // Márgenes internos
+            new EmptyBorder(8, 8, 8, 8) // Margen interno del panel inferior
         ));
 
-        // Botón "Copia Seguridad" - verde
-        JButton btnBackup = new JButton("Copia Seguridad");
-        btnBackup.setBackground(new Color(76, 175, 80)); // Verde
+        JButton btnBackup = new JButton("Copia Seguridad"); // Botón para copiar datos
+        btnBackup.setBackground(new Color(76, 175, 80)); // Color verde
         btnBackup.setForeground(blanco); // Texto blanco
-        btnBackup.setFocusPainted(false);
-        btnBackup.setFont(btnBackup.getFont().deriveFont(Font.BOLD, 12f));
+        btnBackup.setFocusPainted(false); // Sin borde de enfoque
+        btnBackup.setFont(btnBackup.getFont().deriveFont(Font.BOLD, 12f)); // Fuente negrita tamaño 12
 
-        // Botón "Restaurar" - naranja
-        JButton btnRestore = new JButton("Restaurar");
-        btnRestore.setBackground(new Color(255, 152, 0)); // Naranja
+        JButton btnRestore = new JButton("Restaurar"); // Botón para restaurar copias
+        btnRestore.setBackground(new Color(255, 152, 0)); // Color naranja
         btnRestore.setForeground(blanco); // Texto blanco
-        btnRestore.setFocusPainted(false);
-        btnRestore.setFont(btnRestore.getFont().deriveFont(Font.BOLD, 12f));
+        btnRestore.setFocusPainted(false); // Sin borde de enfoque
+        btnRestore.setFont(btnRestore.getFont().deriveFont(Font.BOLD, 12f)); // Fuente negrita tamaño 12
 
-        // Botón "Salir" - rojo
-        JButton btnSalir = new JButton("Salir");
-        btnSalir.setBackground(new Color(244, 67, 54)); // Rojo
+        JButton btnSalir = new JButton("Salir"); // Botón para cerrar la aplicación
+        btnSalir.setBackground(new Color(244, 67, 54)); // Color rojo
         btnSalir.setForeground(blanco); // Texto blanco
-        btnSalir.setFocusPainted(false);
-        btnSalir.setFont(btnSalir.getFont().deriveFont(Font.BOLD, 12f));
+        btnSalir.setFocusPainted(false); // Sin borde de enfoque
+        btnSalir.setFont(btnSalir.getFont().deriveFont(Font.BOLD, 12f)); // Fuente negrita tamaño 12
 
-        // Acción del botón "Copia Seguridad"
         btnBackup.addActionListener(e -> {
             try {
                 BackupUtil.realizarCopia(); // Realiza la copia de seguridad
@@ -112,49 +101,44 @@ public class MainFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage()); // Muestra mensaje de error
             }
         });
-        
-        // Acción del botón "Restaurar"
+
         btnRestore.addActionListener(e -> {
-            // Pide confirmación antes de restaurar (se borrarán todos los datos actuales)
             if (JOptionPane.showConfirmDialog(this,
                     "Se borraran todos los datos y se restaurara la ultima copia. Continuar?",
                     "Restaurar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 try {
-                    BackupUtil.restaurarUltimaCopia(); // Restaura la copia de seguridad
-                    // Recarga todos los datos en los paneles
-                    pnlPaciente.loadData();
-                    pnlDoctor.loadData();
-                    pnlCita.loadData();
-                    pnlTratamiento.loadData();
-                    pnlHistorial.loadData();
-                    pnlCitaTratamiento.loadData();
+                    BackupUtil.restaurarUltimaCopia(); // Restaura la última copia
+                    pnlPaciente.loadData(); // Recarga el panel de pacientes
+                    pnlDoctor.loadData(); // Recarga el panel de doctores
+                    pnlCita.loadData(); // Recarga el panel de citas
+                    pnlTratamiento.loadData(); // Recarga el panel de tratamientos
+                    pnlHistorial.loadData(); // Recarga el panel de historial cl­nico
+                    pnlCitaTratamiento.loadData(); // Recarga el panel de relación cita-tratamiento
                     JOptionPane.showMessageDialog(this, "Datos restaurados"); // Muestra mensaje de éxito
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage()); // Muestra mensaje de error
                 }
             }
         });
-        
-        // Acción del botón "Salir"
+
         btnSalir.addActionListener(e -> System.exit(0)); // Cierra la aplicación
 
-        // Agrega los botones al panel inferior
-        bottom.add(btnBackup);
-        bottom.add(btnRestore);
-        bottom.add(btnSalir);
+        bottom.add(btnBackup); // Añade botón de copia de seguridad
+        bottom.add(btnRestore); // Añade botón de restaurar
+        bottom.add(btnSalir); // Añade botón de salir
 
-        // Agrupa los componentes en la ventana
-        add(nav, BorderLayout.WEST); // Panel de navegación a la izquierda
-        add(panelCentral, BorderLayout.CENTER); // Paneles de contenido en el centro
-        add(bottom, BorderLayout.SOUTH); // Panel de botones abajo
+        add(nav, BorderLayout.WEST); // Agrega panel de navegación a la izquierda
+        add(panelCentral, BorderLayout.CENTER); // Agrega panel central al centro
+        add(bottom, BorderLayout.SOUTH); // Agrega panel inferior abajo
 
-        // Muestra el primer panel por defecto
-        cardLayout.show(panelCentral, "Pacientes");
+        cardLayout.show(panelCentral, "Pacientes"); // Muestra el panel de pacientes por defecto
     }
 
-    // Método principal: punto de entrada de la aplicación
+    /**
+     * Punto de entrada de la aplicación.
+     * Arranca la interfaz de usuario dentro del hilo de eventos de Swing.
+     */
     public static void main(String[] args) {
-        // Ejecuta la interfaz en el hilo de eventos de Swing (thread-safe)
-        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true)); // Inicia la UI en el hilo de eventos
     }
 }

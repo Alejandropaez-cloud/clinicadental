@@ -1,207 +1,221 @@
 package views;
 
-import controllers.controladores.CitaController;
-import controllers.controladores.PacienteController;
-import controllers.controladores.DoctorController;
-import models.modelos.entidades.Cita;
-import models.modelos.entidades.Paciente;
-import models.modelos.entidades.Doctor;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import controllers.controladores.CitaController; // Controlador CRUD de citas
+import controllers.controladores.PacienteController; // Controlador CRUD de pacientes
+import controllers.controladores.DoctorController; // Controlador CRUD de doctores
+import models.modelos.entidades.Cita; // Entidad Cita
+import models.modelos.entidades.Paciente; // Entidad Paciente
+import models.modelos.entidades.Doctor; // Entidad Doctor
+import javax.swing.*; // Componentes Swing
+import javax.swing.table.DefaultTableModel; // Modelo de tabla para JTable
+import java.awt.*; // Layout y colores
+import java.text.SimpleDateFormat; // Formato de fecha y hora
+import java.util.List; // Colecciones de objetos
 
 /**
  * Panel que administra la vista de Citas.
- * Permite gestionar citas programadas y su información asociada.
+ * Permite gestionar citas programadas y su informaciÃƒÂ³n asociada.
  */
 public class CitaPanel extends JPanel {
 
-    private CitaController citaController;
-    private PacienteController pacienteController;
-    private DoctorController doctorController;
-    private JTable table;
-    private DefaultTableModel model;
-    private SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
-    private SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
-    private Color azul = new Color(33, 150, 243);
-    private Color blanco = Color.WHITE;
+    private CitaController citaController; // Controlador de citas
+    private PacienteController pacienteController; // Controlador de pacientes
+    private DoctorController doctorController; // Controlador de doctores
+    private JTable table; // Tabla que muestra las citas
+    private DefaultTableModel model; // Modelo de datos de la tabla
+    private SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy"); // Formato de fecha para citas
+    private SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm"); // Formato de hora para citas
+    private Color azul = new Color(33, 150, 243); // Color azul para encabezados y botones
+    private Color blanco = Color.WHITE; // Color blanco para texto
 
     /**
      * Constructor del panel de Citas.
      * Inicializa controladores y configura la vista.
      */
     public CitaPanel() {
-        citaController = new CitaController();
-        pacienteController = new PacienteController();
-        doctorController = new DoctorController();
-        setLayout(new BorderLayout());
-        setBackground(new Color(240, 245, 250));
-        initComponents();
-        loadData();
+        citaController = new CitaController(); // Crea el controlador de citas
+        pacienteController = new PacienteController(); // Crea el controlador de pacientes
+        doctorController = new DoctorController(); // Crea el controlador de doctores
+        setLayout(new BorderLayout()); // Usa BorderLayout
+        setBackground(new Color(240, 245, 250)); // Fondo suave
+        initComponents(); // Inicializa los componentes visuales
+        loadData(); // Carga las citas desde la base de datos
     }
 
     /**
      * Inicializa los controles visuales del panel de citas.
      */
     private void initComponents() {
-        JLabel titulo = new JLabel("CITAS", SwingConstants.CENTER);
-        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
-        titulo.setForeground(azul);
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        add(titulo, BorderLayout.NORTH);
+        JLabel titulo = new JLabel("CITAS", SwingConstants.CENTER); // TÃƒÂ­tulo centrado
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente en negrita
+        titulo.setForeground(azul); // Color azul del texto
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior e inferior
+        add(titulo, BorderLayout.NORTH); // Agrega el tÃƒÂ­tulo en la parte superior
 
-        String[] cols = {"ID", "Paciente", "Doctor", "Fecha", "Hora Inicio", "Hora Fin", "Estado"};
-        model = new DefaultTableModel(cols, 0) {
-            public boolean isCellEditable(int r, int c) { return false; }
+        String[] cols = {"ID", "Paciente", "Doctor", "Fecha", "Hora Inicio", "Hora Fin", "Estado"}; // Columnas de la tabla
+        model = new DefaultTableModel(cols, 0) { // Modelo de tabla sin celdas editables
+            public boolean isCellEditable(int r, int c) { return false; } // Evita ediciÃƒÂ³n en la tabla
         };
-        table = new JTable(model);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setBackground(azul);
-        table.getTableHeader().setForeground(blanco);
-        table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f));
-        table.setRowHeight(25);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        table = new JTable(model); // Crea la tabla
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // SelecciÃƒÂ³n ÃƒÂºnica
+        table.getTableHeader().setBackground(azul); // Encabezados azules
+        table.getTableHeader().setForeground(blanco); // Texto blanco en encabezado
+        table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f)); // Fuente en encabezado
+        table.setRowHeight(25); // Altura de fila
+        add(new JScrollPane(table), BorderLayout.CENTER); // Agrega la tabla con scroll al centro
 
-        JPanel pnl = new JPanel();
-        pnl.setBackground(new Color(240, 245, 250));
-        pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
-        JButton btnNew = new JButton("Nuevo");
-        JButton btnEdit = new JButton("Editar");
-        JButton btnDel = new JButton("Eliminar");
-        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false);
-        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false);
-        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false);
-        btnNew.addActionListener(e -> dialogo(null));
-        btnEdit.addActionListener(e -> editar());
-        btnDel.addActionListener(e -> eliminar());
-        pnl.add(btnNew);
-        pnl.add(btnEdit);
-        pnl.add(btnDel);
-        add(pnl, BorderLayout.SOUTH);
+        JPanel pnl = new JPanel(); // Panel de botones en la parte inferior
+        pnl.setBackground(new Color(240, 245, 250)); // Fondo del panel de botones
+        pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0)); // Margen interno
+        JButton btnNew = new JButton("Nuevo"); // BotÃƒÂ³n para nueva cita
+        JButton btnEdit = new JButton("Editar"); // BotÃƒÂ³n para editar cita seleccionada
+        JButton btnDel = new JButton("Eliminar"); // BotÃƒÂ³n para eliminar cita seleccionada
+        btnNew.setBackground(azul); // Fondo azul
+        btnNew.setForeground(blanco); // Texto blanco
+        btnNew.setFocusPainted(false); // Sin borde de enfoque
+        btnEdit.setBackground(new Color(255, 152, 0)); // Fondo naranja
+        btnEdit.setForeground(blanco); // Texto blanco
+        btnEdit.setFocusPainted(false); // Sin borde de enfoque
+        btnDel.setBackground(new Color(244, 67, 54)); // Fondo rojo
+        btnDel.setForeground(blanco); // Texto blanco
+        btnDel.setFocusPainted(false); // Sin borde de enfoque
+        btnNew.addActionListener(e -> dialogo(null)); // Abre diÃƒÂ¡logo para nueva cita
+        btnEdit.addActionListener(e -> editar()); // Abre diÃƒÂ¡logo para editar
+        btnDel.addActionListener(e -> eliminar()); // Elimina cita seleccionada
+        pnl.add(btnNew); // AÃƒÂ±ade botÃƒÂ³n Nuevo
+        pnl.add(btnEdit); // AÃƒÂ±ade botÃƒÂ³n Editar
+        pnl.add(btnDel); // AÃƒÂ±ade botÃƒÂ³n Eliminar
+        add(pnl, BorderLayout.SOUTH); // Agrega el panel de botones al sur
     }
 
     /**
      * Carga las citas desde la base de datos y actualiza la tabla.
      */
     public void loadData() {
-        model.setRowCount(0);
-        for (Cita c : citaController.findAll()) {
+        model.setRowCount(0); // Limpia filas anteriores
+        for (Cita c : citaController.findAll()) { // Recorre cada cita recuperada
             model.addRow(new Object[]{
-                c.getCodCita(),
-                c.getPaciente().getNombre() + " " + c.getPaciente().getApellidos(),
-                c.getDoctor().getNombre(),
-                c.getFecha() != null ? sdfFecha.format(c.getFecha()) : "",
-                c.getHoraInicio() != null ? sdfHora.format(c.getHoraInicio()) : "",
-                c.getHoraFin() != null ? sdfHora.format(c.getHoraFin()) : "",
-                c.getEstado()
+                c.getCodCita(), // ID de la cita
+                c.getPaciente().getNombre() + " " + c.getPaciente().getApellidos(), // Nombre completo del paciente
+                c.getDoctor().getNombre(), // Nombre del doctor
+                c.getFecha() != null ? sdfFecha.format(c.getFecha()) : "", // Fecha formateada
+                c.getHoraInicio() != null ? sdfHora.format(c.getHoraInicio()) : "", // Hora de inicio formateada
+                c.getHoraFin() != null ? sdfHora.format(c.getHoraFin()) : "", // Hora de fin formateada
+                c.getEstado() // Estado de la cita
             });
         }
     }
 
+    /**
+     * Abre un diÃƒÂ¡logo para crear o editar una cita.
+     * Permite seleccionar paciente, doctor, fecha, horas y estado.
+     */
     private void dialogo(Cita cita) {
         JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
-                cita == null ? "Nueva Cita" : "Editar Cita", true);
-        d.setSize(350, 300);
-        d.setLocationRelativeTo(this);
-        d.getContentPane().setBackground(new Color(240, 245, 250));
+                cita == null ? "Nueva Cita" : "Editar Cita", true); // DiÃƒÂ¡logo modal
+        d.setSize(350, 300); // TamaÃƒÂ±o del diÃƒÂ¡logo
+        d.setLocationRelativeTo(this); // Centra el diÃƒÂ¡logo respecto al panel
+        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo del diÃƒÂ¡logo
 
-        List<Paciente> pacientes = pacienteController.findAll();
-        List<Doctor> doctores = doctorController.findAll();
+        List<Paciente> pacientes = pacienteController.findAll(); // Lista de pacientes
+        List<Doctor> doctores = doctorController.findAll(); // Lista de doctores
 
-        JComboBox<String> cmbPac = new JComboBox<>();
+        JComboBox<String> cmbPac = new JComboBox<>(); // Combo con pacientes
         for (Paciente p : pacientes)
-            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos());
+            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos()); // AÃƒÂ±ade cada paciente
 
-        JComboBox<String> cmbDoc = new JComboBox<>();
+        JComboBox<String> cmbDoc = new JComboBox<>(); // Combo con doctores
         for (Doctor doc : doctores)
-            cmbDoc.addItem(doc.getCodDoctor() + " - " + doc.getNombre());
+            cmbDoc.addItem(doc.getCodDoctor() + " - " + doc.getNombre()); // AÃƒÂ±ade cada doctor
 
-        JTextField txtFecha = new JTextField();
-        JTextField txtHoraIni = new JTextField();
-        JTextField txtHoraFin = new JTextField();
-        JComboBox<String> cmbEst = new JComboBox<>(new String[]{"Programada", "Completada", "Cancelada"});
+        JTextField txtFecha = new JTextField(); // Campo de fecha
+        JTextField txtHoraIni = new JTextField(); // Campo de hora inicio
+        JTextField txtHoraFin = new JTextField(); // Campo de hora fin
+        JComboBox<String> cmbEst = new JComboBox<>(new String[]{"Programada", "Completada", "Cancelada"}); // Estado de la cita
 
-        if (cita != null) {
-            for (int i = 0; i < cmbPac.getItemCount(); i++)
+        if (cita != null) { // Si se edita una cita existente
+            for (int i = 0; i < cmbPac.getItemCount(); i++) // Busca paciente en combo
                 if (cmbPac.getItemAt(i).startsWith(String.valueOf(cita.getPaciente().getCodPaciente())))
-                    cmbPac.setSelectedIndex(i);
-            for (int i = 0; i < cmbDoc.getItemCount(); i++)
+                    cmbPac.setSelectedIndex(i); // Selecciona paciente actual
+            for (int i = 0; i < cmbDoc.getItemCount(); i++) // Busca doctor en combo
                 if (cmbDoc.getItemAt(i).startsWith(String.valueOf(cita.getDoctor().getCodDoctor())))
-                    cmbDoc.setSelectedIndex(i);
-            txtFecha.setText(cita.getFecha() != null ? sdfFecha.format(cita.getFecha()) : "");
-            txtHoraIni.setText(cita.getHoraInicio() != null ? sdfHora.format(cita.getHoraInicio()) : "");
-            txtHoraFin.setText(cita.getHoraFin() != null ? sdfHora.format(cita.getHoraFin()) : "");
-            cmbEst.setSelectedItem(cita.getEstado());
+                    cmbDoc.setSelectedIndex(i); // Selecciona doctor actual
+            txtFecha.setText(cita.getFecha() != null ? sdfFecha.format(cita.getFecha()) : ""); // Carga fecha de la cita
+            txtHoraIni.setText(cita.getHoraInicio() != null ? sdfHora.format(cita.getHoraInicio()) : ""); // Carga hora inicio
+            txtHoraFin.setText(cita.getHoraFin() != null ? sdfHora.format(cita.getHoraFin()) : ""); // Carga hora fin
+            cmbEst.setSelectedItem(cita.getEstado()); // Carga estado
         }
 
-        JPanel form = new JPanel(new GridLayout(6, 2, 5, 5));
-        form.setBackground(new Color(240, 245, 250));
-        form.add(new JLabel("Paciente:")); form.add(cmbPac);
-        form.add(new JLabel("Doctor:")); form.add(cmbDoc);
-        form.add(new JLabel("Fecha (dd/MM/yyyy):")); form.add(txtFecha);
-        form.add(new JLabel("Hora Inicio (HH:mm):")); form.add(txtHoraIni);
-        form.add(new JLabel("Hora Fin (HH:mm):")); form.add(txtHoraFin);
-        form.add(new JLabel("Estado:")); form.add(cmbEst);
-        d.add(form, BorderLayout.CENTER);
+        JPanel form = new JPanel(new GridLayout(6, 2, 5, 5)); // Formulario de la cita
+        form.setBackground(new Color(240, 245, 250)); // Fondo del formulario
+        form.add(new JLabel("Paciente:")); form.add(cmbPac); // Etiqueta y combo de paciente
+        form.add(new JLabel("Doctor:")); form.add(cmbDoc); // Etiqueta y combo de doctor
+        form.add(new JLabel("Fecha (dd/MM/yyyy):")); form.add(txtFecha); // Etiqueta y campo fecha
+        form.add(new JLabel("Hora Inicio (HH:mm):")); form.add(txtHoraIni); // Etiqueta y campo hora inicio
+        form.add(new JLabel("Hora Fin (HH:mm):")); form.add(txtHoraFin); // Etiqueta y campo hora fin
+        form.add(new JLabel("Estado:")); form.add(cmbEst); // Etiqueta y combo estado
+        d.add(form, BorderLayout.CENTER); // Agrega el formulario al centro
 
-        JPanel pnlBtn = new JPanel();
-        pnlBtn.setBackground(new Color(240, 245, 250));
-        JButton btnOk = new JButton("Guardar");
-        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false);
-        JButton btnCancel = new JButton("Cancelar");
-        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false);
+        JPanel pnlBtn = new JPanel(); // Panel de botones
+        pnlBtn.setBackground(new Color(240, 245, 250)); // Fondo del panel
+        JButton btnOk = new JButton("Guardar"); // BotÃƒÂ³n guardar
+        btnOk.setBackground(azul); // Fondo azul
+        btnOk.setForeground(blanco); // Texto blanco
+        btnOk.setFocusPainted(false); // Sin borde de enfoque
+        JButton btnCancel = new JButton("Cancelar"); // BotÃƒÂ³n cancelar
+        btnCancel.setBackground(new Color(158, 158, 158)); // Fondo gris
+        btnCancel.setForeground(blanco); // Texto blanco
+        btnCancel.setFocusPainted(false); // Sin borde de enfoque
         btnOk.addActionListener(e -> {
             try {
-                int iPac = cmbPac.getSelectedIndex();
-                int iDoc = cmbDoc.getSelectedIndex();
-                if (cita == null) {
+                int iPac = cmbPac.getSelectedIndex(); // ÃƒÂndice de paciente seleccionado
+                int iDoc = cmbDoc.getSelectedIndex(); // ÃƒÂndice de doctor seleccionado
+                if (cita == null) { // Si se crea una cita nueva
                     Cita n = new Cita(pacientes.get(iPac), doctores.get(iDoc),
                             sdfFecha.parse(txtFecha.getText()), sdfHora.parse(txtHoraIni.getText()),
-                            sdfHora.parse(txtHoraFin.getText()), (String) cmbEst.getSelectedItem());
-                    citaController.create(n);
-                } else {
-                    cita.setPaciente(pacientes.get(iPac));
-                    cita.setDoctor(doctores.get(iDoc));
-                    cita.setFecha(sdfFecha.parse(txtFecha.getText()));
-                    cita.setHoraInicio(sdfHora.parse(txtHoraIni.getText()));
-                    cita.setHoraFin(sdfHora.parse(txtHoraFin.getText()));
-                    cita.setEstado((String) cmbEst.getSelectedItem());
-                    citaController.update(cita);
+                            sdfHora.parse(txtHoraFin.getText()), (String) cmbEst.getSelectedItem()); // Crea nueva cita
+                    citaController.create(n); // Guarda la cita
+                } else { // Si se edita una cita existente
+                    cita.setPaciente(pacientes.get(iPac)); // Actualiza paciente
+                    cita.setDoctor(doctores.get(iDoc)); // Actualiza doctor
+                    cita.setFecha(sdfFecha.parse(txtFecha.getText())); // Actualiza fecha
+                    cita.setHoraInicio(sdfHora.parse(txtHoraIni.getText())); // Actualiza hora inicio
+                    cita.setHoraFin(sdfHora.parse(txtHoraFin.getText())); // Actualiza hora fin
+                    cita.setEstado((String) cmbEst.getSelectedItem()); // Actualiza estado
+                    citaController.update(cita); // Guarda cambios
                 }
-                loadData();
-                d.dispose();
+                loadData(); // Recarga la tabla
+                d.dispose(); // Cierra el diÃƒÂ¡logo
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage()); // Muestra mensaje de error
             }
         });
-        btnCancel.addActionListener(e -> d.dispose());
-        pnlBtn.add(btnOk);
-        pnlBtn.add(btnCancel);
-        d.add(pnlBtn, BorderLayout.SOUTH);
-        d.setVisible(true);
+        btnCancel.addActionListener(e -> d.dispose()); // Cierra el diÃƒÂ¡logo sin guardar
+        pnlBtn.add(btnOk); // AÃƒÂ±ade botÃƒÂ³n Guardar
+        pnlBtn.add(btnCancel); // AÃƒÂ±ade botÃƒÂ³n Cancelar
+        d.add(pnlBtn, BorderLayout.SOUTH); // Agrega el panel de botones al pie
+        d.setVisible(true); // Muestra el diÃƒÂ¡logo
     }
 
     /**
-     * Abre el diálogo de edición para la cita seleccionada.
+     * Abre el diÃƒÂ¡logo de ediciÃƒÂ³n para la cita seleccionada.
      */
     private void editar() {
-        int row = table.getSelectedRow();
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }
-        dialogo(citaController.findById((Integer) model.getValueAt(row, 0)));
+        int row = table.getSelectedRow(); // Obtiene fila seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selecciÃƒÂ³n
+        dialogo(citaController.findById((Integer) model.getValueAt(row, 0))); // Abre diÃƒÂ¡logo con la cita seleccionada
     }
 
     /**
-     * Elimina la cita seleccionada tras pedir confirmación.
+     * Elimina la cita seleccionada tras pedir confirmaciÃƒÂ³n.
      */
     private void eliminar() {
-        int row = table.getSelectedRow();
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }
+        int row = table.getSelectedRow(); // Obtiene fila seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selecciÃƒÂ³n
         if (JOptionPane.showConfirmDialog(this, "Eliminar cita?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            citaController.delete((Integer) model.getValueAt(row, 0));
-            loadData();
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminaciÃƒÂ³n
+            citaController.delete((Integer) model.getValueAt(row, 0)); // Elimina la cita por ID
+            loadData(); // Recarga la tabla
         }
     }
 }

@@ -1,195 +1,190 @@
 package views;
 
-import controllers.controladores.HistorialClinicoController;
-import controllers.controladores.PacienteController;
-import models.modelos.entidades.HistorialClinico;
-import models.modelos.entidades.Paciente;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import controllers.controladores.HistorialClinicoController; // Controlador CRUD de historial clínico
+import models.modelos.entidades.HistorialClinico; // Entidad Historial Clinico
+import javax.swing.*; // Componentes Swing
+import javax.swing.table.DefaultTableModel; // Modelo de tabla para JTable
+import java.awt.*; // Layout y colores
+import java.text.SimpleDateFormat; // Formato de fecha
+import java.util.List; // Listas de entidades
 
 /**
- * Panel que administra los historiales clínicos.
- * Permite crear, editar y eliminar registros médicos de pacientes.
+ * Panel que administra la vista de Historial Clinico.
+ * Permite listar, crear, editar y eliminar registros de historial clÃƒÂ­nico.
  */
 public class HistorialClinicoPanel extends JPanel {
 
-    private HistorialClinicoController controller;
-    private PacienteController pacienteController;
-    private JTable table;
-    private DefaultTableModel model;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    private Color azul = new Color(33, 150, 243);
-    private Color blanco = Color.WHITE;
+    private HistorialClinicoController controller; // Controlador de historial clí­nico
+    private JTable table; // Tabla que muestra los historiales
+    private DefaultTableModel model; // Modelo de datos
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // Formato de fecha
+    private Color azul = new Color(33, 150, 243); // Color principal
+    private Color blanco = Color.WHITE; // Color del texto
 
     /**
-     * Constructor del panel de Historial Clínico.
-     * Inicializa controles y carga los datos desde la base de datos.
+     * Constructor del panel de Historial Clinico.
+     * Configura el UI y carga los registros existentes.
      */
     public HistorialClinicoPanel() {
-        controller = new HistorialClinicoController();
-        pacienteController = new PacienteController();
-        setLayout(new BorderLayout());
-        setBackground(new Color(240, 245, 250));
-        initComponents();
-        loadData();
+        controller = new HistorialClinicoController(); // Crea controlador
+        setLayout(new BorderLayout()); // Usa BorderLayout
+        setBackground(new Color(240, 245, 250)); // Fondo suave
+        initComponents(); // Inicializa componentes
+        loadData(); // Carga datos
     }
 
     /**
-     * Inicializa los componentes visuales y la tabla de historiales.
+     * Inicializa los componentes visuales del panel.
      */
     private void initComponents() {
-        JLabel titulo = new JLabel("HISTORIAL CLINICO", SwingConstants.CENTER);
-        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
-        titulo.setForeground(azul);
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        add(titulo, BorderLayout.NORTH);
+        JLabel titulo = new JLabel("HISTORIAL CLINICO", SwingConstants.CENTER); // Título centrado
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente negrita
+        titulo.setForeground(azul); // Texto azul
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior/inferior
+        add(titulo, BorderLayout.NORTH); // Agrega título arriba
 
-        String[] cols = {"ID", "Paciente", "Alergias", "Enfermedades", "Grupo Sang.", "Fecha Alta"};
-        model = new DefaultTableModel(cols, 0) {
-            public boolean isCellEditable(int r, int c) { return false; }
+        String[] cols = {"ID", "Paciente", "Alergias", "Enfermedades Cronicas", "Grupo Sanguineo", "Observaciones", "Fecha Alta"}; // Columnas de historiales
+        model = new DefaultTableModel(cols, 0) { // Modelo no editable
+            public boolean isCellEditable(int r, int c) { return false; } // Evita edición directa
         };
-        table = new JTable(model);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setBackground(azul);
-        table.getTableHeader().setForeground(blanco);
-        table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f));
-        table.setRowHeight(25);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        table = new JTable(model); // Crea tabla
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección ÃƒÂºnica
+        table.getTableHeader().setBackground(azul); // Encabezado azul
+        table.getTableHeader().setForeground(blanco); // Texto blanco
+        table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f)); // Fuente del encabezado
+        table.setRowHeight(25); // Altura de fila
+        add(new JScrollPane(table), BorderLayout.CENTER); // Agrega tabla con scroll
 
-        JPanel pnl = new JPanel();
-        pnl.setBackground(new Color(240, 245, 250));
-        pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
-        JButton btnNew = new JButton("Nuevo");
-        JButton btnEdit = new JButton("Editar");
-        JButton btnDel = new JButton("Eliminar");
-        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false);
-        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false);
-        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false);
-        btnNew.addActionListener(e -> dialogo(null));
-        btnEdit.addActionListener(e -> editar());
-        btnDel.addActionListener(e -> eliminar());
-        pnl.add(btnNew);
-        pnl.add(btnEdit);
-        pnl.add(btnDel);
-        add(pnl, BorderLayout.SOUTH);
+        JPanel pnl = new JPanel(); // Panel de botones
+        pnl.setBackground(new Color(240, 245, 250)); // Fondo panel
+        pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0)); // Margen panel
+        JButton btnNew = new JButton("Nuevo"); // Botón nuevo registro
+        JButton btnEdit = new JButton("Editar"); // Botón editar registro
+        JButton btnDel = new JButton("Eliminar"); // Botón eliminar registro
+        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false); // Estilo botón nuevo
+        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false); // Estilo botón editar
+        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false); // Estilo botón eliminar
+        btnNew.addActionListener(e -> dialogo(null)); // Abre dialogo para nuevo registro
+        btnEdit.addActionListener(e -> editar()); // Edita registro seleccionado
+        btnDel.addActionListener(e -> eliminar()); // Elimina registro seleccionado
+        pnl.add(btnNew); // Añade botón Nuevo
+        pnl.add(btnEdit); // Añade botón Editar
+        pnl.add(btnDel); // Añade botón Eliminar
+        add(pnl, BorderLayout.SOUTH); // Agrega panel de botones abajo
     }
 
     /**
-     * Carga los historiales clínicos desde la base de datos y actualiza la tabla.
+     * Carga los historiales clí­nicos desde la base de datos y actualiza la tabla.
      */
     public void loadData() {
-        model.setRowCount(0);
-        for (HistorialClinico h : controller.findAll()) {
+        model.setRowCount(0); // Limpia filas
+        for (HistorialClinico h : controller.findAll()) { // Recorre registros
             model.addRow(new Object[]{
-                h.getCodHistorial(),
-                h.getPaciente().getNombre() + " " + h.getPaciente().getApellidos(),
-                h.getAlergias(), h.getEnfermedadesCronicas(), h.getGrupoSanguineo(),
-                h.getFechaAlta() != null ? sdf.format(h.getFechaAlta()) : ""
+                h.getCodHistorial(), // ID de historial
+                h.getPaciente().getNombre() + " " + h.getPaciente().getApellidos(), // Paciente completo
+                h.getAlergias(), // Alergias
+                h.getEnfermedadesCronicas(), // Enfermedades crónicas
+                h.getGrupoSanguineo(), // Grupo sanguíneo
+                h.getObservacionesGenerales(), // Observaciones generales
+                h.getFechaAlta() != null ? sdf.format(h.getFechaAlta()) : "" // Fecha de alta formateada
             });
         }
     }
 
+    /**
+     * Abre un dialogo para crear o editar un historial clí­nico.
+     */
     private void dialogo(HistorialClinico historial) {
         JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
-                historial == null ? "Nuevo Historial" : "Editar Historial", true);
-        d.setSize(400, 300);
-        d.setLocationRelativeTo(this);
-        d.getContentPane().setBackground(new Color(240, 245, 250));
+                historial == null ? "Nuevo Historial" : "Editar Historial", true); // Dialogo modal
+        d.setSize(350, 250); // Tamaño del dialogo
+        d.setLocationRelativeTo(this); // Centrado
+        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo dialogo
 
-        List<Paciente> pacientes = pacienteController.findAll();
-        JComboBox<String> cmbPac = new JComboBox<>();
-        for (Paciente p : pacientes)
-            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos());
+        JTextField txtPaciente = new JTextField(); // Campo paciente
+        txtPaciente.setEditable(false); // El paciente no se edita aquí
+        JTextField txtAlergias = new JTextField(); // Campo alergias
+        JTextField txtEnfermedades = new JTextField(); // Campo enfermedades crónicas
+        JTextField txtGrupoSanguineo = new JTextField(); // Campo grupo sanguíneo
+        JTextField txtObservaciones = new JTextField(); // Campo observaciones
+        JTextField txtFecha = new JTextField(); // Campo fecha de alta
 
-        JTextField txtAlerg = new JTextField();
-        JTextField txtEnf = new JTextField();
-        JComboBox<String> cmbGrupo = new JComboBox<>(new String[]{"", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"});
-        JTextField txtObs = new JTextField();
-
-        if (historial != null) {
-            for (int i = 0; i < cmbPac.getItemCount(); i++)
-                if (cmbPac.getItemAt(i).startsWith(String.valueOf(historial.getPaciente().getCodPaciente())))
-                    cmbPac.setSelectedIndex(i);
-            cmbPac.setEnabled(false);
-            txtAlerg.setText(historial.getAlergias());
-            txtEnf.setText(historial.getEnfermedadesCronicas());
-            cmbGrupo.setSelectedItem(historial.getGrupoSanguineo());
-            txtObs.setText(historial.getObservacionesGenerales());
+        if (historial != null) { // Si se edita un historial existente
+            txtPaciente.setText(historial.getPaciente().getNombre() + " " + historial.getPaciente().getApellidos()); // Carga paciente
+            txtAlergias.setText(historial.getAlergias()); // Carga alergias
+            txtEnfermedades.setText(historial.getEnfermedadesCronicas()); // Carga enfermedades crónicas
+            txtGrupoSanguineo.setText(historial.getGrupoSanguineo()); // Carga grupo sanguíneo
+            txtObservaciones.setText(historial.getObservacionesGenerales()); // Carga observaciones
+            txtFecha.setText(historial.getFechaAlta() != null ? sdf.format(historial.getFechaAlta()) : ""); // Carga fecha de alta
         }
 
-        JPanel form = new JPanel(new GridLayout(5, 2, 5, 5));
-        form.setBackground(new Color(240, 245, 250));
-        form.add(new JLabel("Paciente:")); form.add(cmbPac);
-        form.add(new JLabel("Alergias:")); form.add(txtAlerg);
-        form.add(new JLabel("Enfermedades:")); form.add(txtEnf);
-        form.add(new JLabel("Grupo Sang.:")); form.add(cmbGrupo);
-        form.add(new JLabel("Observaciones:")); form.add(txtObs);
-        d.add(form, BorderLayout.CENTER);
+        JPanel form = new JPanel(new GridLayout(6, 2, 5, 5)); // Formulario 6 filas x 2 columnas
+        form.setBackground(new Color(240, 245, 250)); // Fondo formulario
+        form.add(new JLabel("Paciente:")); form.add(txtPaciente); // Paciente
+        form.add(new JLabel("Alergias:")); form.add(txtAlergias); // Alergias
+        form.add(new JLabel("Enfermedades Cronicas:")); form.add(txtEnfermedades); // Enfermedades crónicas
+        form.add(new JLabel("Grupo Sanguineo:")); form.add(txtGrupoSanguineo); // Grupo sanguíneo
+        form.add(new JLabel("Observaciones:")); form.add(txtObservaciones); // Observaciones
+        form.add(new JLabel("Fecha Alta (dd/MM/yyyy):")); form.add(txtFecha); // Fecha
+        d.add(form, BorderLayout.CENTER); // Agrega formulario al centro
 
-        JPanel pnlBtn = new JPanel();
-        pnlBtn.setBackground(new Color(240, 245, 250));
-        JButton btnOk = new JButton("Guardar");
-        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false);
-        JButton btnCancel = new JButton("Cancelar");
-        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false);
+        JPanel pnlBtn = new JPanel(); // Panel de botones
+        pnlBtn.setBackground(new Color(240, 245, 250)); // Fondo
+        JButton btnOk = new JButton("Guardar"); // Botón guardar
+        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false); // Estilo botón guardar
+        JButton btnCancel = new JButton("Cancelar"); // Botón cancelar
+        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false); // Estilo botÃƒÂ³n cancelar
         btnOk.addActionListener(e -> {
             try {
-                if (historial == null) {
-                    int idx = cmbPac.getSelectedIndex();
-                    if (idx == -1) { JOptionPane.showMessageDialog(d, "Selecciona un paciente"); return; }
-                    for (HistorialClinico hc : controller.findAll())
-                        if (hc.getPaciente().getCodPaciente().equals(pacientes.get(idx).getCodPaciente())) {
-                            JOptionPane.showMessageDialog(d, "Este paciente ya tiene historial");
-                            return;
-                        }
-                    HistorialClinico n = new HistorialClinico(pacientes.get(idx));
-                    n.setAlergias(txtAlerg.getText());
-                    n.setEnfermedadesCronicas(txtEnf.getText());
-                    n.setGrupoSanguineo((String) cmbGrupo.getSelectedItem());
-                    n.setObservacionesGenerales(txtObs.getText());
-                    controller.create(n);
-                } else {
-                    historial.setAlergias(txtAlerg.getText());
-                    historial.setEnfermedadesCronicas(txtEnf.getText());
-                    historial.setGrupoSanguineo((String) cmbGrupo.getSelectedItem());
-                    historial.setObservacionesGenerales(txtObs.getText());
-                    controller.update(historial);
+                if (historial == null) { // Creación
+                    HistorialClinico n = new HistorialClinico(); // Crea nueva entidad
+                    n.setPaciente(null); // El paciente no se selecciona directamente en este formulario
+                    n.setAlergias(txtAlergias.getText()); // Asigna alergias
+                    n.setEnfermedadesCronicas(txtEnfermedades.getText()); // Asigna enfermedades crónicas
+                    n.setGrupoSanguineo(txtGrupoSanguineo.getText()); // Asigna grupo sanguíneo
+                    n.setObservacionesGenerales(txtObservaciones.getText()); // Asigna observaciones
+                    n.setFechaAlta(txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText())); // Asigna fecha de alta
+                    controller.create(n); // Guarda el historial
+                } else { // Edición
+                    historial.setAlergias(txtAlergias.getText()); // Actualiza alergias
+                    historial.setEnfermedadesCronicas(txtEnfermedades.getText()); // Actualiza enfermedades crónicas
+                    historial.setGrupoSanguineo(txtGrupoSanguineo.getText()); // Actualiza grupo sanguíneo
+                    historial.setObservacionesGenerales(txtObservaciones.getText()); // Actualiza observaciones
+                    historial.setFechaAlta(txtFecha.getText().isEmpty() ? null : sdf.parse(txtFecha.getText())); // Actualiza fecha de alta
+                    controller.update(historial); // Guarda cambios
                 }
-                loadData();
-                d.dispose();
+                loadData(); // Recarga datos
+                d.dispose(); // Cierra dialogo
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage()); // Muestra error
             }
         });
-        btnCancel.addActionListener(e -> d.dispose());
-        pnlBtn.add(btnOk);
-        pnlBtn.add(btnCancel);
-        d.add(pnlBtn, BorderLayout.SOUTH);
-        d.setVisible(true);
+        btnCancel.addActionListener(e -> d.dispose()); // Cierra diÃƒÂ¡logo
+        pnlBtn.add(btnOk); // AÃƒÂ±ade botÃƒÂ³n Guardar
+        pnlBtn.add(btnCancel); // AÃƒÂ±ade botÃƒÂ³n Cancelar
+        d.add(pnlBtn, BorderLayout.SOUTH); // Agrega botones en la parte inferior
+        d.setVisible(true); // Muestra el diÃƒÂ¡logo
     }
 
     /**
-     * Abre el diálogo de edición para el historial seleccionado.
+     * Abre el diÃƒÂ¡logo de ediciÃƒÂ³n para el historial seleccionado.
      */
     private void editar() {
-        int row = table.getSelectedRow();
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; }
-        dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
+        int row = table.getSelectedRow(); // Obtiene fila seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selecciÃƒÂ³n
+        dialogo(controller.findById((Integer) model.getValueAt(row, 0))); // Abre diÃƒÂ¡logo con historial seleccionado
     }
 
     /**
-     * Elimina el historial clínico seleccionado tras pedir confirmación.
+     * Elimina el historial seleccionado despuÃƒÂ©s de pedir confirmaciÃƒÂ³n.
      */
     private void eliminar() {
-        int row = table.getSelectedRow();
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; }
+        int row = table.getSelectedRow(); // Obtiene fila seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selecciÃƒÂ³n
         if (JOptionPane.showConfirmDialog(this, "Eliminar historial?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            controller.delete((Integer) model.getValueAt(row, 0));
-            loadData();
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminaciÃƒÂ³n
+            controller.delete((Integer) model.getValueAt(row, 0)); // Elimina historial
+            loadData(); // Recarga tabla
         }
     }
 }

@@ -18,9 +18,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Entidad que representa el historial clínico de un paciente.
- * Relación 1:1 con Paciente (un paciente tiene un historial, un historial pertenece a un paciente).
- * Esta entidad es la dueña de la relación (tiene la FK codPaciente).
+ * Entidad que representa el historial clÃƒÂ­nico de un paciente.
+ * RelaciÃƒÂ³n 1:1 con Paciente (un paciente tiene un historial, un historial pertenece a un paciente).
+ * Esta entidad es la dueÃƒÂ±a de la relaciÃƒÂ³n (tiene la FK codPaciente).
  */
 @Entity
 @Table(name = "Historial_Clinico")
@@ -31,65 +31,65 @@ import javax.persistence.TemporalType;
 })
 public class HistorialClinico implements Serializable {
 
-    // ID único de serialización usado para persistencia
+    // ID ÃƒÂºnico de serializaciÃƒÂ³n usado para persistencia
     private static final long serialVersionUID = 1L;
 
-    // Clave primaria autoincrementada del historial clínico
+    // Clave primaria autoincrementada del historial clÃƒÂ­nico
     @Id // Marca como clave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automáticamente el valor
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automÃƒÂ¡ticamente el valor
     @Basic(optional = false) // Campo obligatorio
     @Column(name = "codHistorial") // Nombre de la columna en la BD
     private Integer codHistorial;
 
-    // Relación 1:1 con Paciente (lado propietario - tiene la clave foránea)
-    // Esta es la tabla dueña de la relación (Historial_Clinico tiene la FK codPaciente)
+    // RelaciÃƒÂ³n 1:1 con Paciente (lado propietario - tiene la clave forÃƒÂ¡nea)
+    // Esta es la tabla dueÃƒÂ±a de la relaciÃƒÂ³n (Historial_Clinico tiene la FK codPaciente)
     @JoinColumn(name = "codPaciente", referencedColumnName = "codPaciente", unique = true) // unique=true asegura 1:1
-    @OneToOne(optional = false) // Relación obligatoria: todo historial debe tener un paciente
+    @OneToOne(optional = false) // RelaciÃƒÂ³n obligatoria: todo historial debe tener un paciente
     private Paciente paciente;
 
     // Alergias del paciente registradas en el historial
     @Column(name = "Alergias") // Nombre de la columna en la BD (puede ser NULL)
     private String alergias;
 
-    // Enfermedades crónicas del paciente registradas
+    // Enfermedades crÃƒÂ³nicas del paciente registradas
     @Column(name = "EnfermedadesCronicas") // Nombre de la columna en la BD (puede ser NULL)
     private String enfermedadesCronicas;
 
-    // Grupo sanguíneo del paciente (ej: O+, B-, AB+, etc)
+    // Grupo sanguÃƒÂ­neo del paciente (ej: O+, B-, AB+, etc)
     @Column(name = "GrupoSanguineo") // Nombre de la columna en la BD (puede ser NULL)
     private String grupoSanguineo;
 
-    // Observaciones generales o notas importantes del médico
+    // Observaciones generales o notas importantes del mÃƒÂ©dico
     @Column(name = "ObservacionesGenerales") // TEXT en MySQL se mapea como String
     private String observacionesGenerales;
 
-    // Fecha y hora de creación del historial en la BD
+    // Fecha y hora de creaciÃƒÂ³n del historial en la BD
     // FechaAlta tiene DEFAULT CURRENT_TIMESTAMP en la BD
     @Column(name = "FechaAlta") // Nombre de la columna en la BD
     @Temporal(TemporalType.TIMESTAMP) // Mapea a TIMESTAMP en MySQL (fecha y hora completa)
     private Date fechaAlta;
 
-    // Constructor vacío requerido por JPA
+    // Constructor vacÃƒÂ­o requerido por JPA
     public HistorialClinico() {
     }
 
-    // Constructor con solo el ID (usado para búsquedas)
+    // Constructor con solo el ID (usado para bÃƒÂºsquedas)
     public HistorialClinico(Integer codHistorial) {
         this.codHistorial = codHistorial; // Asigna el ID
     }
 
-    // Constructor con parámetro (usado al crear un historial para un paciente)
+    // Constructor con parÃƒÂ¡metro (usado al crear un historial para un paciente)
     public HistorialClinico(Paciente paciente) {
         this.paciente = paciente; // Asigna el paciente
-        this.fechaAlta = new Date(); // Establece la fecha actual como fecha de creación
+        this.fechaAlta = new Date(); // Establece la fecha actual como fecha de creaciÃƒÂ³n
     }
 
-    // Obtiene el código (ID) del historial
+    // Obtiene el cÃƒÂ³digo (ID) del historial
     public Integer getCodHistorial() {
         return codHistorial;
     }
 
-    // Establece el código (ID) del historial
+    // Establece el cÃƒÂ³digo (ID) del historial
     public void setCodHistorial(Integer codHistorial) {
         this.codHistorial = codHistorial;
     }
@@ -99,8 +99,8 @@ public class HistorialClinico implements Serializable {
         return paciente;
     }
 
-    // Establece el paciente y sincroniza la relación bidireccional
-    // Al asignar el paciente, también le decimos al paciente que este es su historial
+    // Establece el paciente y sincroniza la relaciÃƒÂ³n bidireccional
+    // Al asignar el paciente, tambiÃƒÂ©n le decimos al paciente que este es su historial
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente; // Asigna el paciente
         // Sincroniza el lado inverso solo si el paciente es diferente al actual
@@ -119,51 +119,51 @@ public class HistorialClinico implements Serializable {
         this.alergias = alergias;
     }
 
-    // Obtiene las enfermedades crónicas registradas
+    // Obtiene las enfermedades crÃƒÂ³nicas registradas
     public String getEnfermedadesCronicas() {
         return enfermedadesCronicas;
     }
 
-    // Establece las enfermedades crónicas del paciente
+    // Establece las enfermedades crÃƒÂ³nicas del paciente
     public void setEnfermedadesCronicas(String enfermedadesCronicas) {
         this.enfermedadesCronicas = enfermedadesCronicas;
     }
 
-    // Obtiene el grupo sanguíneo del paciente
+    // Obtiene el grupo sanguÃƒÂ­neo del paciente
     public String getGrupoSanguineo() {
         return grupoSanguineo;
     }
 
-    // Establece el grupo sanguíneo del paciente
+    // Establece el grupo sanguÃƒÂ­neo del paciente
     public void setGrupoSanguineo(String grupoSanguineo) {
         this.grupoSanguineo = grupoSanguineo;
     }
 
-    // Obtiene las observaciones generales del médico
+    // Obtiene las observaciones generales del mÃƒÂ©dico
     public String getObservacionesGenerales() {
         return observacionesGenerales;
     }
 
-    // Establece las observaciones generales del médico
+    // Establece las observaciones generales del mÃƒÂ©dico
     public void setObservacionesGenerales(String observacionesGenerales) {
         this.observacionesGenerales = observacionesGenerales;
     }
 
-    // Obtiene la fecha y hora de creación del historial
+    // Obtiene la fecha y hora de creaciÃƒÂ³n del historial
     public Date getFechaAlta() {
         return fechaAlta;
     }
 
-    // Establece la fecha y hora de creación del historial
+    // Establece la fecha y hora de creaciÃƒÂ³n del historial
     public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 
-    // Calcula el código hash basado en el ID del historial
+    // Calcula el cÃƒÂ³digo hash basado en el ID del historial
     @Override
     public int hashCode() {
         int hash = 0; // Inicializa el hash
-        // Si el ID no es nulo, suma su código hash
+        // Si el ID no es nulo, suma su cÃƒÂ³digo hash
         hash += (codHistorial != null ? codHistorial.hashCode() : 0);
         return hash; // Retorna el hash calculado
     }
@@ -181,7 +181,7 @@ public class HistorialClinico implements Serializable {
                  (this.codHistorial != null && !this.codHistorial.equals(other.codHistorial)));
     }
 
-    // Retorna una representación en texto del historial clínico
+    // Retorna una representaciÃƒÂ³n en texto del historial clÃƒÂ­nico
     @Override
     public String toString() {
         // Retorna una cadena con todos los datos del historial

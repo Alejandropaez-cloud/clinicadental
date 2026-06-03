@@ -124,6 +124,11 @@ USE clinica_dental;
 | email | VARCHAR(100) | |
 | direccion | VARCHAR(200) | |
 
+### Dudas ###
+Lo de los atributos auto-increment son atributos que lo que hacen es asignar
+automaticamente al primer paciente por ejemplo el ID 1 al segundo le asigna 
+2 y asi consecutivamente.
+
 #### Doctor
 | Columna | Tipo | Restricciones |
 |---------|------|---------------|

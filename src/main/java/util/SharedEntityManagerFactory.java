@@ -1,53 +1,53 @@
-﻿package util;
+package util;
 
 // Importaciones para JPA (Java Persistence API)
 import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
-import javax.persistence.Persistence; // Carga la configuración de persistencia
+import javax.persistence.Persistence; // Carga la configuraciÃƒÂ³n de persistencia
 
 /**
- * Fábrica compartida de EntityManagerFactory.
- * Esta clase implementa el patrón Singleton para garantizar que toda la aplicación
- * comparta una única instancia de EntityManagerFactory.
+ * FÃƒÂ¡brica compartida de EntityManagerFactory.
+ * Esta clase implementa el patrÃƒÂ³n Singleton para garantizar que toda la aplicaciÃƒÂ³n
+ * comparta una ÃƒÂºnica instancia de EntityManagerFactory.
  *
- * ¿Por qué?: Crear múltiples instancias es ineficiente y consume recursos.
- * Una única instancia compartida es thread-safe por defecto.
+ * Ã‚Â¿Por quÃƒÂ©?: Crear mÃƒÂºltiples instancias es ineficiente y consume recursos.
+ * Una ÃƒÂºnica instancia compartida es thread-safe por defecto.
  *
- * Patrón: Singleton con inicialización estática (thread-safe automáticamente).
+ * PatrÃƒÂ³n: Singleton con inicializaciÃƒÂ³n estÃƒÂ¡tica (thread-safe automÃƒÂ¡ticamente).
  */
 public class SharedEntityManagerFactory {
 
-    // Única instancia de EntityManagerFactory para toda la aplicación
+    // ÃƒÅ¡nica instancia de EntityManagerFactory para toda la aplicaciÃƒÂ³n
     // Se crea una sola vez cuando se carga esta clase
     // "clinica_dental" debe coincidir con el nombre de la persistence-unit en persistence.xml
     private static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("clinica_dental");
 
-    // Bloque estático: se ejecuta cuando se carga la clase por primera vez
+    // Bloque estÃƒÂ¡tico: se ejecuta cuando se carga la clase por primera vez
     static {
-        // Registra un hook de cierre para cuando se termina la aplicación
+        // Registra un hook de cierre para cuando se termina la aplicaciÃƒÂ³n
         // Esto garantiza que los recursos se liberen correctamente
         Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
     }
 
     /**
-     * Obtiene la instancia única de EntityManagerFactory.
-     * Este método es thread-safe porque siempre retorna la misma instancia estática.
+     * Obtiene la instancia ÃƒÂºnica de EntityManagerFactory.
+     * Este mÃƒÂ©todo es thread-safe porque siempre retorna la misma instancia estÃƒÂ¡tica.
      *
-     * @return La instancia única de EntityManagerFactory para toda la aplicación
+     * @return La instancia ÃƒÂºnica de EntityManagerFactory para toda la aplicaciÃƒÂ³n
      */
     public static EntityManagerFactory getInstance() {
-        return EMF; // Retorna la única instancia
+        return EMF; // Retorna la ÃƒÂºnica instancia
     }
 
     /**
-     * Cierra la fábrica y libera los recursos de la conexión a la BD.
-     * Se llama automáticamente al terminar la aplicación (via shutdown hook),
-     * pero también puede llamarse manualmente si es necesario.
+     * Cierra la fÃƒÂ¡brica y libera los recursos de la conexiÃƒÂ³n a la BD.
+     * Se llama automÃƒÂ¡ticamente al terminar la aplicaciÃƒÂ³n (via shutdown hook),
+     * pero tambiÃƒÂ©n puede llamarse manualmente si es necesario.
      *
      * IMPORTANTE: Solo se debe llamar una sola vez al final del programa.
      */
     public static void close() {
         if (EMF != null && EMF.isOpen()) {
-            EMF.close(); // Cierra la fábrica y libera recursos
+            EMF.close(); // Cierra la fÃƒÂ¡brica y libera recursos
         }
     }
 }
