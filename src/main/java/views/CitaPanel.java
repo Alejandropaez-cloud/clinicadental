@@ -12,6 +12,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * Panel que administra la vista de Citas.
+ * Permite gestionar citas programadas y su información asociada.
+ */
 public class CitaPanel extends JPanel {
 
     private CitaController citaController;
@@ -24,6 +28,10 @@ public class CitaPanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Citas.
+     * Inicializa controladores y configura la vista.
+     */
     public CitaPanel() {
         citaController = new CitaController();
         pacienteController = new PacienteController();
@@ -34,6 +42,9 @@ public class CitaPanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Inicializa los controles visuales del panel de citas.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("CITAS", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -71,6 +82,9 @@ public class CitaPanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga las citas desde la base de datos y actualiza la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (Cita c : citaController.findAll()) {
@@ -169,12 +183,18 @@ public class CitaPanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para la cita seleccionada.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }
         dialogo(citaController.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina la cita seleccionada tras pedir confirmación.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; }

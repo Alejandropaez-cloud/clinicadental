@@ -10,6 +10,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * Panel que administra los historiales clínicos.
+ * Permite crear, editar y eliminar registros médicos de pacientes.
+ */
 public class HistorialClinicoPanel extends JPanel {
 
     private HistorialClinicoController controller;
@@ -20,6 +24,10 @@ public class HistorialClinicoPanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Historial Clínico.
+     * Inicializa controles y carga los datos desde la base de datos.
+     */
     public HistorialClinicoPanel() {
         controller = new HistorialClinicoController();
         pacienteController = new PacienteController();
@@ -29,6 +37,9 @@ public class HistorialClinicoPanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Inicializa los componentes visuales y la tabla de historiales.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("HISTORIAL CLINICO", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -66,6 +77,9 @@ public class HistorialClinicoPanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga los historiales clínicos desde la base de datos y actualiza la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (HistorialClinico h : controller.findAll()) {
@@ -157,12 +171,18 @@ public class HistorialClinicoPanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para el historial seleccionado.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; }
         dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina el historial clínico seleccionado tras pedir confirmación.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; }

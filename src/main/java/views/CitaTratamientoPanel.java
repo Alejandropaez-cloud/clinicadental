@@ -12,6 +12,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * Panel que administra la relación Cita-Tratamiento.
+ * Permite asignar tratamientos a las citas y gestionar cantidades.
+ */
 public class CitaTratamientoPanel extends JPanel {
 
     private CitaTratamientoController controller;
@@ -23,6 +27,10 @@ public class CitaTratamientoPanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Cita-Tratamiento.
+     * Crea la interfaz y sincroniza los registros relacionados.
+     */
     public CitaTratamientoPanel() {
         controller = new CitaTratamientoController();
         citaController = new CitaController();
@@ -33,6 +41,9 @@ public class CitaTratamientoPanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Inicializa los controles y la tabla que muestra las relaciones.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("CITA - TRATAMIENTO", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -70,6 +81,9 @@ public class CitaTratamientoPanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga los registros de Cita-Tratamiento desde la BD y actualiza la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (CitaTratamiento ct : controller.findAll()) {
@@ -169,12 +183,18 @@ public class CitaTratamientoPanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para el detalle de cita-tratamiento seleccionado.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un registro"); return; }
         dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina el registro de cita-tratamiento seleccionado.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un registro"); return; }

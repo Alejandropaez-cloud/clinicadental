@@ -7,6 +7,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Panel que administra la vista de Tratamientos.
+ * Permite listar, crear, editar y eliminar tratamientos dentales.
+ */
 public class TratamientoPanel extends JPanel {
 
     private TratamientoController controller;
@@ -15,6 +19,10 @@ public class TratamientoPanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Tratamientos.
+     * Configura la interfaz y carga los registros existentes.
+     */
     public TratamientoPanel() {
         controller = new TratamientoController();
         setLayout(new BorderLayout());
@@ -23,6 +31,9 @@ public class TratamientoPanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Construye los componentes visuales del panel de tratamientos.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("TRATAMIENTOS", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -60,6 +71,9 @@ public class TratamientoPanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga los tratamientos desde la base de datos y actualiza la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (Tratamiento t : controller.findAll()) {
@@ -128,12 +142,18 @@ public class TratamientoPanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para el tratamiento seleccionado.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un tratamiento"); return; }
         dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina el tratamiento seleccionado después de pedir confirmación.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un tratamiento"); return; }

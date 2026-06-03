@@ -77,76 +77,92 @@ public class Doctor implements Serializable {
         this.citaCollection = new ArrayList<>();
     }
 
+    // Obtiene el código (ID) del doctor
     public Integer getCodDoctor() {
         return codDoctor;
     }
 
+    // Establece el código (ID) del doctor
     public void setCodDoctor(Integer codDoctor) {
         this.codDoctor = codDoctor;
     }
 
+    // Obtiene el número de colegiado del doctor
     public String getNumeroColegiado() {
         return numeroColegiado;
     }
 
+    // Establece el número de colegiado del doctor
     public void setNumeroColegiado(String numeroColegiado) {
         this.numeroColegiado = numeroColegiado;
     }
 
+    // Obtiene el nombre del doctor
     public String getNombre() {
         return nombre;
     }
 
+    // Establece el nombre del doctor
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    // Obtiene la especialidad del doctor (ej: Odontología General, Endodoncia, etc)
     public String getEspecialidad() {
         return especialidad;
     }
 
+    // Establece la especialidad del doctor
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
 
+    // Obtiene el teléfono de contacto del doctor
     public String getTelefonoContacto() {
         return telefonoContacto;
     }
 
+    // Establece el teléfono de contacto del doctor
     public void setTelefonoContacto(String telefonoContacto) {
         this.telefonoContacto = telefonoContacto;
     }
 
+    // Obtiene la colección de citas atendidas por este doctor
     public Collection<Cita> getCitaCollection() {
         return citaCollection;
     }
 
-    // Sincronización bidireccional: al asignar una colección de citas,
-    // a cada cita le decimos que su doctor es este
+    // Establece la colección de citas y sincroniza la relación bidireccional
     public void setCitaCollection(Collection<Cita> citaCollection) {
-        this.citaCollection = citaCollection;
+        this.citaCollection = citaCollection; // Asigna la nueva colección
+        // Sincroniza el lado inverso: cada Cita debe saber que es atendida por este Doctor
         for (Cita cita : citaCollection) {
             cita.setDoctor(this);
         }
     }
 
+    // Agrega una cita al doctor y sincroniza la relación bidireccional
     public void addCita(Cita cita) {
-        this.citaCollection.add(cita);
-        cita.setDoctor(this);
+        this.citaCollection.add(cita); // Añade a la colección local
+        cita.setDoctor(this); // Sincroniza el lado inverso
     }
 
+    // Elimina una cita del doctor y limpia la relación bidireccional
     public void removeCita(Cita cita) {
-        this.citaCollection.remove(cita);
-        cita.setDoctor(null);
+        this.citaCollection.remove(cita); // Elimina de la colección local
+        cita.setDoctor(null); // Limpia la referencia inversa
     }
 
+    // Calcula el código hash basado en el ID del doctor
     @Override
     public int hashCode() {
-        int hash = 0;
+        int hash = 0; // Inicializa el hash
+        // Si el ID no es nulo, suma su código hash
         hash += (codDoctor != null ? codDoctor.hashCode() : 0);
-        return hash;
+        return hash; // Retorna el hash calculado
     }
 
+    // Compara dos doctores por su ID
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Doctor)) {

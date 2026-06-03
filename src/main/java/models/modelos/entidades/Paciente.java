@@ -203,56 +203,66 @@ public class Paciente implements Serializable {
     }
 
     public Collection<Cita> getCitaCollection() {
-        return citaCollection;
+        return citaCollection; // Retorna la colección de citas del paciente
     }
 
-    // Sincronización bidireccional: al asignar una colección de citas,
-    // a cada cita le decimos que su paciente es este
+    // Establece la colección de citas y sincroniza la relación bidireccional
+    // Al asignar una colección de citas, también actualiza el lado inverso
     public void setCitaCollection(Collection<Cita> citaCollection) {
-        this.citaCollection = citaCollection;
+        this.citaCollection = citaCollection; // Asigna la nueva colección
+        // Sincroniza el lado inverso: cada Cita debe saber que pertenece a este Paciente
         for (Cita cita : citaCollection) {
             cita.setPaciente(this);
         }
     }
 
-    // Método helper para añadir una cita y mantener sincronizados
-    // ambos lados de la relación bidireccional
+    // Agrega una cita al paciente y sincroniza la relación bidireccional
     public void addCita(Cita cita) {
-        this.citaCollection.add(cita);
-        cita.setPaciente(this); // Sincronización: la cita también apunta a este paciente
+        this.citaCollection.add(cita); // Añade a la colección local
+        cita.setPaciente(this); // Sincroniza el lado inverso
     }
 
-    // Método helper para eliminar una cita y romper la relación
-    // en ambos lados
+    // Elimina una cita del paciente y limpia la relación bidireccional
     public void removeCita(Cita cita) {
-        this.citaCollection.remove(cita);
-        cita.setPaciente(null); // Rompemos la relación bidireccional
+        this.citaCollection.remove(cita); // Elimina de la colección local
+        cita.setPaciente(null); // Limpia la referencia inversa
     }
 
-    // hashCode y equals se basan en el ID para identificar objetos únicos
+    // Calcula el código hash basado en el ID del paciente
     @Override
     public int hashCode() {
-        int hash = 0;
+        int hash = 0; // Inicializa el hash
+        // Si el ID no es nulo, suma su código hash
         hash += (codPaciente != null ? codPaciente.hashCode() : 0);
-        return hash;
+        return hash; // Retorna el hash calculado
     }
 
+    // Compara dos pacientes por su ID
     @Override
     public boolean equals(Object object) {
+        // Verifica si el otro objeto es una instancia de Paciente
         if (!(object instanceof Paciente)) {
-            return false;
+            return false; // No son del mismo tipo
         }
-        Paciente other = (Paciente) object;
-        return !((this.codPaciente == null && other.codPaciente != null) || (this.codPaciente != null && !this.codPaciente.equals(other.codPaciente)));
+        Paciente other = (Paciente) object; // Convierte a Paciente
+        // Retorna verdadero si ambos tienen el mismo ID (o ambos son nulos)
+        return !((this.codPaciente == null && other.codPaciente != null) || 
+                 (this.codPaciente != null && !this.codPaciente.equals(other.codPaciente)));
     }
 
+    // Retorna una representación en texto del paciente
     @Override
     public String toString() {
-        String tmp = "";
+        String tmp = ""; // Variable temporal para el historial
+        // Si existe historial, lo agrega a la representación
         if (historialClinico != null) {
             tmp += historialClinico + "\n";
         }
-        return "Paciente{" + "codPaciente=" + codPaciente + ", dni=" + dni + ", nombre=" + nombre + ", apellidos=" + apellidos + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", email=" + email + ", direccion=" + direccion + ", historial=" + tmp + '}';
+        // Retorna una cadena con todos los datos del paciente
+        return "Paciente{" + "codPaciente=" + codPaciente + ", dni=" + dni + ", nombre=" + nombre + 
+               ", apellidos=" + apellidos + ", fechaNacimiento=" + fechaNacimiento + 
+               ", telefono=" + telefono + ", email=" + email + ", direccion=" + direccion + 
+               ", historial=" + tmp + '}';
     }
 
 }

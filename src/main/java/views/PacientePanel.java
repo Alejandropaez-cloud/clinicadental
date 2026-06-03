@@ -8,6 +8,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * Panel que administra la vista de Pacientes.
+ * Permite listar, crear, editar y eliminar pacientes.
+ */
 public class PacientePanel extends JPanel {
 
     private PacienteController controller;
@@ -17,6 +21,10 @@ public class PacientePanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Pacientes.
+     * Configura el layout, inicializa componentes y carga datos desde la BD.
+     */
     public PacientePanel() {
         controller = new PacienteController();
         setLayout(new BorderLayout());
@@ -25,6 +33,10 @@ public class PacientePanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Inicializa los componentes visuales del panel.
+     * Construye la tabla de pacientes y los botones de acción.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("PACIENTES", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -62,6 +74,13 @@ public class PacientePanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carga los datos de pacientes desde la base de datos
+     * y los muestra en la tabla central.
+     */
+    /**
+     * Carga los pacientes desde la base de datos y los muestra en la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (Paciente p : controller.findAll()) {
@@ -73,6 +92,10 @@ public class PacientePanel extends JPanel {
         }
     }
 
+    /**
+     * Abre un diálogo para crear o editar un paciente.
+     * Reutiliza los campos del formulario según si se pasa un paciente existente.
+     */
     private void dialogo(Paciente paciente) {
         JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
                 paciente == null ? "Nuevo Paciente" : "Editar Paciente", true);
@@ -149,12 +172,18 @@ public class PacientePanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para el paciente seleccionado.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un paciente"); return; }
         dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina el paciente seleccionado después de pedir confirmación.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un paciente"); return; }

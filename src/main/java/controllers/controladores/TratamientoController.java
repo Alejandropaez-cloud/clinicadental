@@ -1,32 +1,37 @@
 package controllers.controladores;
 
-import java.util.List;
+import java.util.List; // Importa List para retornar colecciones
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import util.SharedEntityManagerFactory;
+import javax.persistence.EntityManager; // Gestiona la conexión con la BD
+import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
+import javax.persistence.EntityTransaction; // Controla las transacciones
+import util.SharedEntityManagerFactory; // Factoría compartida de EntityManager
 
-import models.modelos.entidades.Tratamiento;
+import models.modelos.entidades.Tratamiento; // Importa la entidad Tratamiento
 
 /**
- * Controlador CRUD para la entidad Tratamiento.
+ * Controlador CRUD para la entidad Tratamiento (servicios dentales).
+ * Implementa operaciones Create, Read, Update, Delete sobre tratamientos.
+ * Los tratamientos pueden estar asociados a múltiples citas (relación N:M).
  */
 public class TratamientoController {
 
+    // EntityManagerFactory para crear instancias de EntityManager
     private final EntityManagerFactory emf;
 
+    // Constructor: obtiene la instancia compartida de EntityManagerFactory
     public TratamientoController() {
         this.emf = SharedEntityManagerFactory.getInstance();
     }
 
+    // Método auxiliar: crea un nuevo EntityManager para comunicarse con la BD
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
     /**
-     * CREATE - Inserta un nuevo tratamiento.
-     * @param tratamiento El tratamiento a crear.
+     * CREATE - Inserta un nuevo tratamiento en la base de datos.
+     * @param tratamiento El tratamiento a crear
      */
     public void create(Tratamiento tratamiento) {
         EntityManager em = getEntityManager();

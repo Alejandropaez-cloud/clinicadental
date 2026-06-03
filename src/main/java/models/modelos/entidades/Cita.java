@@ -1,4 +1,4 @@
-package models.modelos.entidades;
+﻿package models.modelos.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ import javax.persistence.TemporalType;
 
 /**
  * Entidad que representa una cita en la clínica dental.
- * Una cita pertenece a un paciente y es atendida por un doctor.
- * En cada cita se pueden realizar varios tratamientos (relación N:M).
+ * Cada cita está asociada a un paciente y a un doctor,
+ * y puede contener varios tratamientos a través de CitaTratamiento.
  */
 @Entity
 @Table(name = "Cita")
@@ -36,185 +36,180 @@ import javax.persistence.TemporalType;
 })
 public class Cita implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // Identificador de versión para Serial
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "codCita")
-    private Integer codCita;
+    private Integer codCita; // ID de la cita
 
-    // Relación N:1 con Paciente (muchas citas pueden pertenecer a un paciente)
-    // @JoinColumn indica que esta tabla (Cita) tiene la FK codPaciente
-    // Este es el lado propietario de la relación (tiene la FK)
     @JoinColumn(name = "codPaciente", referencedColumnName = "codPaciente")
-    @ManyToOne(optional = false) // optional = false porque una cita siempre tiene paciente
-    private Paciente paciente;
+    @ManyToOne(optional = false)
+    private Paciente paciente; // Paciente asociado a la cita
 
-    // Relación N:1 con Doctor (muchas citas pueden ser atendidas por un doctor)
     @JoinColumn(name = "codDoctor", referencedColumnName = "codDoctor")
-    @ManyToOne(optional = false) // optional = false porque una cita siempre tiene doctor
-    private Doctor doctor;
+    @ManyToOne(optional = false)
+    private Doctor doctor; // Doctor que atiende la cita
 
     @Basic(optional = false)
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE) // Solo fecha (sin hora)
-    private Date fecha;
+    @Temporal(TemporalType.DATE)
+    private Date fecha; // Fecha de la cita (solo día)
 
     @Basic(optional = false)
     @Column(name = "horaInicio")
-    @Temporal(TemporalType.TIME) // Solo hora (sin fecha)
-    private Date horaInicio;
+    @Temporal(TemporalType.TIME)
+    private Date horaInicio; // Hora de inicio de la cita
 
     @Basic(optional = false)
     @Column(name = "horaFin")
-    @Temporal(TemporalType.TIME) // Solo hora (sin fecha)
-    private Date horaFin;
+    @Temporal(TemporalType.TIME)
+    private Date horaFin; // Hora de fin de la cita
 
     @Basic(optional = false)
     @Column(name = "estado")
-    private String estado;
+    private String estado; // Estado de la cita: programada, completada, cancelada
 
+    @Basic(optional = false)
     @Column(name = "fechaCreacion")
-    @Temporal(TemporalType.TIMESTAMP) // Fecha y hora completa
-    private Date fechaCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaCreacion; // Fecha y hora en que se creó el registro
 
-    // Relación 1:N con CitaTratamiento (tabla puente para N:M con Tratamiento)
-    // Una cita puede tener varios tratamientos asociados
-    // cascade = CascadeType.PERSIST -> al persistir una Cita, se persistirán
-    // sus CitaTratamiento asociados
-    // orphanRemoval = true -> al eliminar un CitaTratamiento de la colección,
-    // se elimina de la BD
     @OneToMany(mappedBy = "cita", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private Collection<CitaTratamiento> citaTratamientoCollection;
+    private Collection<CitaTratamiento> citaTratamientoCollection; // Tratamientos asociados a la cita
 
     public Cita() {
+        this.citaTratamientoCollection = new ArrayList<>(); // Inicializa colección vacía
     }
 
     public Cita(Integer codCita) {
-        this.codCita = codCita;
+        this();
+        this.codCita = codCita; // Asigna solo el ID
     }
 
     public Cita(Paciente paciente, Doctor doctor, Date fecha, Date horaInicio, Date horaFin, String estado) {
-        this.paciente = paciente;
-        this.doctor = doctor;
-        this.fecha = fecha;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
-        this.estado = estado;
-        this.fechaCreacion = new Date(); // Fecha actual por defecto
-        this.citaTratamientoCollection = new ArrayList<>();
+        this();
+        this.paciente = paciente; // Asigna el paciente
+        this.doctor = doctor; // Asigna el doctor
+        this.fecha = fecha; // Asigna la fecha
+        this.horaInicio = horaInicio; // Asigna la hora de inicio
+        this.horaFin = horaFin; // Asigna la hora de fin
+        this.estado = estado; // Asigna el estado
+        this.fechaCreacion = new Date(); // Establece la fecha de creación actual
     }
 
     public Integer getCodCita() {
-        return codCita;
+        return codCita; // Retorna el ID de la cita
     }
 
     public void setCodCita(Integer codCita) {
-        this.codCita = codCita;
+        this.codCita = codCita; // Establece el ID de la cita
     }
 
     public Paciente getPaciente() {
-        return paciente;
+        return paciente; // Retorna el paciente asociado
     }
 
     public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
+        this.paciente = paciente; // Establece el paciente asociado
     }
 
     public Doctor getDoctor() {
-        return doctor;
+        return doctor; // Retorna el doctor asociado
     }
 
     public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+        this.doctor = doctor; // Establece el doctor asociado
     }
 
     public Date getFecha() {
-        return fecha;
+        return fecha; // Retorna la fecha de la cita
     }
 
     public void setFecha(Date fecha) {
-        this.fecha = fecha;
+        this.fecha = fecha; // Establece la fecha de la cita
     }
 
     public Date getHoraInicio() {
-        return horaInicio;
+        return horaInicio; // Retorna la hora de inicio
     }
 
     public void setHoraInicio(Date horaInicio) {
-        this.horaInicio = horaInicio;
+        this.horaInicio = horaInicio; // Establece la hora de inicio
     }
 
     public Date getHoraFin() {
-        return horaFin;
+        return horaFin; // Retorna la hora de fin
     }
 
     public void setHoraFin(Date horaFin) {
-        this.horaFin = horaFin;
+        this.horaFin = horaFin; // Establece la hora de fin
     }
 
     public String getEstado() {
-        return estado;
+        return estado; // Retorna el estado de la cita
     }
 
     public void setEstado(String estado) {
-        this.estado = estado;
+        this.estado = estado; // Establece el estado de la cita
     }
 
     public Date getFechaCreacion() {
-        return fechaCreacion;
+        return fechaCreacion; // Retorna la fecha de creación
     }
 
     public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+        this.fechaCreacion = fechaCreacion; // Establece la fecha de creación
     }
 
     public Collection<CitaTratamiento> getCitaTratamientoCollection() {
-        return citaTratamientoCollection;
+        return citaTratamientoCollection; // Retorna los tratamientos asociados
     }
 
-    // Sincronización bidireccional con CitaTratamiento
     public void setCitaTratamientoCollection(Collection<CitaTratamiento> citaTratamientoCollection) {
-        this.citaTratamientoCollection = citaTratamientoCollection;
+        this.citaTratamientoCollection = citaTratamientoCollection; // Asigna la colección
         for (CitaTratamiento ct : citaTratamientoCollection) {
-            ct.setCita(this);
+            ct.setCita(this); // Sincroniza la relación inversa
         }
     }
 
     public void addCitaTratamiento(CitaTratamiento citaTratamiento) {
-        this.citaTratamientoCollection.add(citaTratamiento);
-        citaTratamiento.setCita(this);
+        this.citaTratamientoCollection.add(citaTratamiento); // Añade el tratamiento
+        citaTratamiento.setCita(this); // Sincroniza la relación inversa
     }
 
     public void removeCitaTratamiento(CitaTratamiento citaTratamiento) {
-        this.citaTratamientoCollection.remove(citaTratamiento);
-        citaTratamiento.setCita(null);
+        this.citaTratamientoCollection.remove(citaTratamiento); // Elimina el tratamiento
+        citaTratamiento.setCita(null); // Limpia la referencia inversa
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (codCita != null ? codCita.hashCode() : 0);
-        return hash;
+        int hash = 0; // Inicializa el hash
+        hash += (codCita != null ? codCita.hashCode() : 0); // Usa el ID como hash
+        return hash; // Retorna el hash calculado
     }
 
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Cita)) {
-            return false;
+            return false; // No son del mismo tipo
         }
-        Cita other = (Cita) object;
+        Cita other = (Cita) object; // Convierte al tipo correcto
         return !((this.codCita == null && other.codCita != null) || (this.codCita != null && !this.codCita.equals(other.codCita)));
     }
 
     @Override
     public String toString() {
-        String tmp = "";
+        String tmp = ""; // Construye una lista de tratamientos
         for (CitaTratamiento ct : citaTratamientoCollection) {
-            tmp += ct + "\n";
+            tmp += ct + "\n"; // Añade cada tratamiento en nueva línea
         }
-        return "Cita{" + "codCita=" + codCita + ", paciente=" + paciente.getNombre() + " " + paciente.getApellidos() + ", doctor=" + doctor.getNombre() + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", estado=" + estado + ", tratamientos=\n" + tmp + '}';
+        return "Cita{" + "codCita=" + codCita + ", paciente=" + (paciente != null ? paciente.getNombre() + " " + paciente.getApellidos() : "null")
+                + ", doctor=" + (doctor != null ? doctor.getNombre() : "null")
+                + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin
+                + ", estado=" + estado + ", fechaCreacion=" + fechaCreacion + ", tratamientos=\n" + tmp + '}';
     }
 
 }

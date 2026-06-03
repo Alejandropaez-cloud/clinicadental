@@ -7,6 +7,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Panel que administra la vista de Doctores.
+ * Permite listar, crear, editar y eliminar doctores.
+ */
 public class DoctorPanel extends JPanel {
 
     private DoctorController controller;
@@ -15,6 +19,10 @@ public class DoctorPanel extends JPanel {
     private Color azul = new Color(33, 150, 243);
     private Color blanco = Color.WHITE;
 
+    /**
+     * Constructor del panel de Doctores.
+     * Inicializa la interfaz y carga los datos disponibles.
+     */
     public DoctorPanel() {
         controller = new DoctorController();
         setLayout(new BorderLayout());
@@ -23,6 +31,9 @@ public class DoctorPanel extends JPanel {
         loadData();
     }
 
+    /**
+     * Construye los componentes visuales del panel de doctores.
+     */
     private void initComponents() {
         JLabel titulo = new JLabel("DOCTORES", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f));
@@ -60,6 +71,12 @@ public class DoctorPanel extends JPanel {
         add(pnl, BorderLayout.SOUTH);
     }
 
+    /**
+     * Recupera los doctores de la base de datos y actualiza la tabla.
+     */
+    /**
+     * Recupera los doctores desde la base de datos y actualiza la tabla.
+     */
     public void loadData() {
         model.setRowCount(0);
         for (Doctor d : controller.findAll()) {
@@ -134,12 +151,18 @@ public class DoctorPanel extends JPanel {
         d.setVisible(true);
     }
 
+    /**
+     * Abre el diálogo de edición para el doctor seleccionado.
+     */
     private void editar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un doctor"); return; }
         dialogo(controller.findById((Integer) model.getValueAt(row, 0)));
     }
 
+    /**
+     * Elimina el doctor seleccionado después de pedir confirmación.
+     */
     private void eliminar() {
         int row = table.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un doctor"); return; }

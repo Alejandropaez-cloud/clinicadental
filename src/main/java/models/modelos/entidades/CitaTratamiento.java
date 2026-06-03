@@ -40,108 +40,131 @@ import javax.persistence.TemporalType;
 })
 public class CitaTratamiento implements Serializable {
 
+    // ID único de serialización usado para persistencia
     private static final long serialVersionUID = 1L;
 
-    // Su propio @Id con @GeneratedValue como indica la directriz JPA
-    // La BD genera automáticamente este valor con AUTO_INCREMENT
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
+    // Clave primaria autoincrementada de la tabla Cita_Tratamiento
+    @Id // Marca como clave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automáticamente el valor
+    @Basic(optional = false) // Campo obligatorio
+    @Column(name = "id") // Nombre de la columna en la BD
     private Integer id;
 
-    // Relación ManyToOne con Cita
-    // @JoinColumn indica la columna foránea en la tabla Cita_Tratamiento
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "codCita", referencedColumnName = "codCita")
+    // Relación ManyToOne con Cita (muchos CitaTratamiento pueden pertenecer a una Cita)
+    @ManyToOne(optional = false) // Relación obligatoria: todo CitaTratamiento necesita una Cita
+    @JoinColumn(name = "codCita", referencedColumnName = "codCita") // Define la clave foránea
     private Cita cita;
 
-    // Relación ManyToOne con Tratamiento
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "codTratamiento", referencedColumnName = "codTratamiento")
+    // Relación ManyToOne con Tratamiento (muchos CitaTratamiento pueden referenciarse a un Tratamiento)
+    @ManyToOne(optional = false) // Relación obligatoria: todo CitaTratamiento necesita un Tratamiento
+    @JoinColumn(name = "codTratamiento", referencedColumnName = "codTratamiento") // Define la clave foránea
     private Tratamiento tratamiento;
 
-    @Basic(optional = false)
-    @Column(name = "Cantidad")
+    // Cantidad de unidades de este tratamiento a realizar en la cita
+    @Basic(optional = false) // Campo obligatorio
+    @Column(name = "Cantidad") // Nombre de la columna en la BD
     private Integer cantidad;
 
-    @Column(name = "FechaRegistro")
-    @Temporal(TemporalType.TIMESTAMP)
+    // Fecha y hora de registro de este CitaTratamiento
+    @Column(name = "FechaRegistro") // Nombre de la columna en la BD
+    @Temporal(TemporalType.TIMESTAMP) // Mapea a TIMESTAMP en MySQL
     private Date fechaRegistro;
 
+    // Constructor vacío requerido por JPA
     public CitaTratamiento() {
     }
 
+    // Constructor con solo el ID (usado para búsquedas)
     public CitaTratamiento(Integer id) {
-        this.id = id;
+        this.id = id; // Asigna el ID
     }
 
+    // Constructor con parámetros (usado al crear un nuevo CitaTratamiento)
     public CitaTratamiento(Cita cita, Tratamiento tratamiento, Integer cantidad) {
-        this.cita = cita;
-        this.tratamiento = tratamiento;
-        this.cantidad = cantidad;
-        this.fechaRegistro = new Date();
+        this.cita = cita; // Asigna la cita
+        this.tratamiento = tratamiento; // Asigna el tratamiento
+        this.cantidad = cantidad; // Asigna la cantidad
+        this.fechaRegistro = new Date(); // Establece la fecha actual como fecha de registro
     }
 
+    // Obtiene el ID del registro CitaTratamiento
     public Integer getId() {
         return id;
     }
 
+    // Establece el ID del registro CitaTratamiento
     public void setId(Integer id) {
         this.id = id;
     }
 
+    // Obtiene la cita asociada a este CitaTratamiento
     public Cita getCita() {
         return cita;
     }
 
+    // Establece la cita asociada a este CitaTratamiento
     public void setCita(Cita cita) {
         this.cita = cita;
     }
 
+    // Obtiene el tratamiento asociado a este CitaTratamiento
     public Tratamiento getTratamiento() {
         return tratamiento;
     }
 
+    // Establece el tratamiento asociado a este CitaTratamiento
     public void setTratamiento(Tratamiento tratamiento) {
         this.tratamiento = tratamiento;
     }
 
+    // Obtiene la cantidad de unidades de tratamiento
     public Integer getCantidad() {
         return cantidad;
     }
 
+    // Establece la cantidad de unidades de tratamiento
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 
+    // Obtiene la fecha y hora de registro
     public Date getFechaRegistro() {
         return fechaRegistro;
     }
 
+    // Establece la fecha y hora de registro
     public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
+    // Calcula el código hash basado en el ID del registro
     @Override
     public int hashCode() {
-        int hash = 0;
+        int hash = 0; // Inicializa el hash
+        // Si el ID no es nulo, suma su código hash
         hash += (id != null ? id.hashCode() : 0);
-        return hash;
+        return hash; // Retorna el hash calculado
     }
 
+    // Compara dos CitaTratamiento por su ID
     @Override
     public boolean equals(Object object) {
+        // Verifica si el otro objeto es una instancia de CitaTratamiento
         if (!(object instanceof CitaTratamiento)) {
-            return false;
+            return false; // No son del mismo tipo
         }
-        CitaTratamiento other = (CitaTratamiento) object;
+        CitaTratamiento other = (CitaTratamiento) object; // Convierte a CitaTratamiento
+        // Retorna verdadero si ambos tienen el mismo ID
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
+    // Retorna una representación en texto del CitaTratamiento
     @Override
     public String toString() {
-        return "CitaTratamiento{" + "id=" + id + ", codCita=" + cita.getCodCita() + ", codTratamiento=" + tratamiento.getCodTratamiento() + ", cantidad=" + cantidad + ", tratamiento=" + tratamiento.getNombreTratamiento() + '}';
+        // Retorna una cadena con los datos principales del CitaTratamiento
+        return "CitaTratamiento{" + "id=" + id + ", codCita=" + cita.getCodCita() + 
+               ", codTratamiento=" + tratamiento.getCodTratamiento() + ", cantidad=" + cantidad + 
+               ", tratamiento=" + tratamiento.getNombreTratamiento() + '}';
     }
 
 }
