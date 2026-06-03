@@ -82,54 +82,55 @@ CREATE TABLE Cita_Tratamiento (
 );
 
 -- DATOS DE EJEMPLO (mínimo 5 registros por tabla)
+-- Se especifican los IDs explícitamente para que las FK de las tablas hijas referencien correctamente
 
-INSERT INTO Paciente (DNI, Nombre, Apellidos, Fecha_Nacimiento, telefono, email, direccion) VALUES
-('12345678A', 'Juan', 'García López', '1990-05-14', '600111223', 'juan.garcia@gmail.com', 'Calle Mayor 12, Madrid'),
-('23456789B', 'María', 'Martínez Ruiz', '1985-08-22', '600222334', 'maria.martinez@hotmail.com', 'Avda. Constitución 45, Sevilla'),
-('34567890C', 'Ana', 'Fernández Pérez', '1995-12-03', '600333445', 'ana.fernandez@yahoo.es', 'Plaza España 7, Valencia'),
-('45678901D', 'Carlos', 'Rodríguez Sánchez', '1978-03-19', '600444556', 'carlos.rodriguez@gmail.com', 'Calle Real 23, Barcelona'),
-('56789012E', 'Laura', 'Díaz Gómez', '2000-07-30', '600555667', 'laura.diaz@outlook.com', 'Paseo Marítimo 8, Málaga'),
-('67890123F', 'Pedro', 'López Hernández', '1982-11-11', '600666778', 'pedro.lopez@gmail.com', 'Calle Luna 34, Murcia'),
-('78901234G', 'Sofía', 'Torres Jiménez', '1993-04-25', '600777889', 'sofia.torres@gmail.com', 'Calle Sol 15, Bilbao'),
-('89012345H', 'David', 'Moreno Castro', '1987-09-14', '600888990', 'david.moreno@empresa.com', 'Avda. Libertad 28, Zaragoza');
+INSERT INTO Paciente (codPaciente, DNI, Nombre, Apellidos, Fecha_Nacimiento, telefono, email, direccion) VALUES
+(1, '12345678A', 'Juan', 'García López', '1990-05-14', '600111223', 'juan.garcia@gmail.com', 'Calle Mayor 12, Madrid'),
+(2, '23456789B', 'María', 'Martínez Ruiz', '1985-08-22', '600222334', 'maria.martinez@hotmail.com', 'Avda. Constitución 45, Sevilla'),
+(3, '34567890C', 'Ana', 'Fernández Pérez', '1995-12-03', '600333445', 'ana.fernandez@yahoo.es', 'Plaza España 7, Valencia'),
+(4, '45678901D', 'Carlos', 'Rodríguez Sánchez', '1978-03-19', '600444556', 'carlos.rodriguez@gmail.com', 'Calle Real 23, Barcelona'),
+(5, '56789012E', 'Laura', 'Díaz Gómez', '2000-07-30', '600555667', 'laura.diaz@outlook.com', 'Paseo Marítimo 8, Málaga'),
+(6, '67890123F', 'Pedro', 'López Hernández', '1982-11-11', '600666778', 'pedro.lopez@gmail.com', 'Calle Luna 34, Murcia'),
+(7, '78901234G', 'Sofía', 'Torres Jiménez', '1993-04-25', '600777889', 'sofia.torres@gmail.com', 'Calle Sol 15, Bilbao'),
+(8, '89012345H', 'David', 'Moreno Castro', '1987-09-14', '600888990', 'david.moreno@empresa.com', 'Avda. Libertad 28, Zaragoza');
 
-INSERT INTO Doctor (NumeroColegiado, Nombre, Especialidad, TelefonoContacto) VALUES
-('COL001/2020', 'Dr. Antonio Molina', 'Odontología General', '611111111'),
-('COL002/2019', 'Dra. Isabel García', 'Ortodoncia', '622222222'),
-('COL003/2021', 'Dr. Rafael López', 'Endodoncia', '633333333'),
-('COL004/2019', 'Dra. Catalina Ruiz', 'Periodoncia', '644444444'),
-('COL005/2022', 'Dr. Javier Moreno', 'Cirugía Oral', '655555555'),
-('COL006/2023', 'Dra. Laura Sánchez', 'Implantología', '666666666');
+INSERT INTO Doctor (codDoctor, NumeroColegiado, Nombre, Especialidad, TelefonoContacto) VALUES
+(1, 'COL001/2020', 'Dr. Antonio Molina', 'Odontología General', '611111111'),
+(2, 'COL002/2019', 'Dra. Isabel García', 'Ortodoncia', '622222222'),
+(3, 'COL003/2021', 'Dr. Rafael López', 'Endodoncia', '633333333'),
+(4, 'COL004/2019', 'Dra. Catalina Ruiz', 'Periodoncia', '644444444'),
+(5, 'COL005/2022', 'Dr. Javier Moreno', 'Cirugía Oral', '655555555'),
+(6, 'COL006/2023', 'Dra. Laura Sánchez', 'Implantología', '666666666');
 
-INSERT INTO Tratamiento (NombreTratamiento, Descripcion, PrecioEstimado, DuracionMinutos) VALUES
-('Limpieza Dental', 'Eliminación de sarro y placa bacteriana con ultrasonidos y pulido', 50.00, 30),
-('Blanqueamiento Dental', 'Aplicación de peróxido de hidrógeno para blanquear la dentición', 200.00, 60),
-('Empaste Composite', 'Relleno de caries con resina composite del color del diente', 80.00, 45),
-('Extracción Muela Juicio', 'Extracción quirúrgica del tercer molar incluido o semi-incluido', 150.00, 60),
-('Ortodoncia (Revisión)', 'Control y ajuste mensual del tratamiento de brackets', 60.00, 20),
-('Implante Dental', 'Colocación de implante de titanio con corona protésica', 900.00, 90),
-('Endodoncia', 'Tratamiento de conducto para eliminar la pulpa infectada', 250.00, 75),
-('Férula Descarga', 'Fabricación y ajuste de férula para el bruxismo', 120.00, 40);
+INSERT INTO Tratamiento (codTratamiento, NombreTratamiento, Descripcion, PrecioEstimado, DuracionMinutos) VALUES
+(1, 'Limpieza Dental', 'Eliminación de sarro y placa bacteriana con ultrasonidos y pulido', 50.00, 30),
+(2, 'Blanqueamiento Dental', 'Aplicación de peróxido de hidrógeno para blanquear la dentición', 200.00, 60),
+(3, 'Empaste Composite', 'Relleno de caries con resina composite del color del diente', 80.00, 45),
+(4, 'Extracción Muela Juicio', 'Extracción quirúrgica del tercer molar incluido o semi-incluido', 150.00, 60),
+(5, 'Ortodoncia (Revisión)', 'Control y ajuste mensual del tratamiento de brackets', 60.00, 20),
+(6, 'Implante Dental', 'Colocación de implante de titanio con corona protésica', 900.00, 90),
+(7, 'Endodoncia', 'Tratamiento de conducto para eliminar la pulpa infectada', 250.00, 75),
+(8, 'Férula Descarga', 'Fabricación y ajuste de férula para el bruxismo', 120.00, 40);
 
-INSERT INTO Historial_Clinico (codPaciente, Alergias, EnfermedadesCronicas, GrupoSanguineo, ObservacionesGenerales) VALUES
-(1, 'Penicilina, Ibuprofeno', 'Ninguna', 'A+', 'Paciente con bruxismo leve. Usar anestesia sin epinefrina'),
-(2, 'Ninguna', 'Diabetes tipo 2', 'O+', 'Controlar niveles de azúcar antes de cualquier intervención. Citas preferiblemente por la mañana'),
-(3, 'Ibuprofeno, Aspirina', 'Asma', 'B+', 'Evitar AINEs. Tener inhalador disponible en la consulta'),
-(4, 'Ninguna', 'Hipertensión arterial', 'AB+', 'Monitorizar presión arterial antes de cada procedimiento'),
-(5, 'Látex', 'Ninguna', 'A-', 'Usar guantes sin látex y material libre de látex en todos los procedimientos'),
-(6, 'Sulfamidas', 'Ninguna', 'O-', 'Paciente sin complicaciones adicionales'),
-(7, 'Anestesia local (lidocaína)', 'Ninguna', 'B-', 'Usar anestesia alternativa tipo mepivacaína'),
-(8, 'Ninguna', 'Ninguna', 'O+', 'Paciente sano sin antecedentes de interés');
+INSERT INTO Historial_Clinico (codHistorial, codPaciente, Alergias, EnfermedadesCronicas, GrupoSanguineo, ObservacionesGenerales) VALUES
+(1, 1, 'Penicilina, Ibuprofeno', 'Ninguna', 'A+', 'Paciente con bruxismo leve. Usar anestesia sin epinefrina'),
+(2, 2, 'Ninguna', 'Diabetes tipo 2', 'O+', 'Controlar niveles de azúcar antes de cualquier intervención. Citas preferiblemente por la mañana'),
+(3, 3, 'Ibuprofeno, Aspirina', 'Asma', 'B+', 'Evitar AINEs. Tener inhalador disponible en la consulta'),
+(4, 4, 'Ninguna', 'Hipertensión arterial', 'AB+', 'Monitorizar presión arterial antes de cada procedimiento'),
+(5, 5, 'Látex', 'Ninguna', 'A-', 'Usar guantes sin látex y material libre de látex en todos los procedimientos'),
+(6, 6, 'Sulfamidas', 'Ninguna', 'O-', 'Paciente sin complicaciones adicionales'),
+(7, 7, 'Anestesia local (lidocaína)', 'Ninguna', 'B-', 'Usar anestesia alternativa tipo mepivacaína'),
+(8, 8, 'Ninguna', 'Ninguna', 'O+', 'Paciente sano sin antecedentes de interés');
 
-INSERT INTO Cita (codPaciente, codDoctor, fecha, horaInicio, horaFin, estado) VALUES
-(1, 1, '2026-06-10', '10:00:00', '10:30:00', 'Completada'),
-(2, 2, '2026-06-10', '11:00:00', '11:45:00', 'Programada'),
-(3, 3, '2026-06-11', '09:30:00', '10:15:00', 'Programada'),
-(4, 4, '2026-06-11', '12:00:00', '12:30:00', 'Programada'),
-(5, 5, '2026-06-12', '16:00:00', '16:40:00', 'Cancelada'),
-(6, 6, '2026-06-12', '17:00:00', '17:30:00', 'Programada'),
-(7, 1, '2026-06-13', '09:00:00', '10:00:00', 'Programada'),
-(8, 2, '2026-06-13', '10:30:00', '11:00:00', 'Programada');
+INSERT INTO Cita (codCita, codPaciente, codDoctor, fecha, horaInicio, horaFin, estado) VALUES
+(1, 1, 1, '2026-06-10', '10:00:00', '10:30:00', 'Completada'),
+(2, 2, 2, '2026-06-10', '11:00:00', '11:45:00', 'Programada'),
+(3, 3, 3, '2026-06-11', '09:30:00', '10:15:00', 'Programada'),
+(4, 4, 4, '2026-06-11', '12:00:00', '12:30:00', 'Programada'),
+(5, 5, 5, '2026-06-12', '16:00:00', '16:40:00', 'Cancelada'),
+(6, 6, 6, '2026-06-12', '17:00:00', '17:30:00', 'Programada'),
+(7, 7, 1, '2026-06-13', '09:00:00', '10:00:00', 'Programada'),
+(8, 8, 2, '2026-06-13', '10:30:00', '11:00:00', 'Programada');
 
 INSERT INTO Cita_Tratamiento (codCita, codTratamiento, Cantidad) VALUES
 (1, 1, 1),
