@@ -2,17 +2,17 @@ package controllers.controladores;
 
 import java.util.List; // Importa List para retornar colecciones
 
-import javax.persistence.EntityManager; // Gestiona la conexión con la BD
+import javax.persistence.EntityManager; // Gestiona la conexi?n con la BD
 import javax.persistence.EntityManagerFactory; // Factory para crear EntityManager
 import javax.persistence.EntityTransaction; // Controla las transacciones
-import util.SharedEntityManagerFactory; // Factorí­a compartida de EntityManager
+import util.SharedEntityManagerFactory; // Factor?a compartida de EntityManager
 
 import models.modelos.entidades.Cita; // Importa la entidad Cita
 
 /**
  * Controlador CRUD para la entidad Cita.
  * Implementa operaciones Create, Read, Update, Delete sobre citas.
- * Sigue el mismo patrón que los demás controladores: manejo de transacciones
+ * Sigue el mismo patr?n que los dem?s controladores: manejo de transacciones
  * y cierre de recursos garantizado en bloques finally.
  */
 public class CitaController {
@@ -25,7 +25,7 @@ public class CitaController {
         this.emf = SharedEntityManagerFactory.getInstance();
     }
 
-    // MÃƒÂ©todo auxiliar: crea un nuevo EntityManager para comunicarse con la BD
+    // Método auxiliar: crea un nuevo EntityManager para comunicarse con la BD
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
@@ -33,7 +33,7 @@ public class CitaController {
     /**
      * CREATE - Inserta una nueva cita en la base de datos.
      * Al persistir una Cita, si tiene CitaTratamiento asociados con
-     * cascade PERSIST, también se guardaron automáticamente.
+     * cascade PERSIST, tambi?n se guardaron autom?ticamente.
      * @param cita La cita a crear
      */
     public void create(Cita cita) {
@@ -64,7 +64,7 @@ public class CitaController {
             // Busca la cita en la BD por su clave primaria
             return em.find(Cita.class, id);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexi?n
         }
     }
 
@@ -78,7 +78,7 @@ public class CitaController {
             // Ejecuta la NamedQuery "Cita.findAll" definida en la entidad
             return em.createNamedQuery("Cita.findAll", Cita.class).getResultList();
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexi?n
         }
     }
 
@@ -88,19 +88,19 @@ public class CitaController {
      */
     public void update(Cita cita) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacci?n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacci?n
             em.merge(cita); // Actualiza el registro en la BD (UPDATE)
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacci?n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
             throw new RuntimeException("Error al actualizar la cita", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexi?n
         }
     }
 
@@ -110,22 +110,22 @@ public class CitaController {
      */
     public void delete(Integer id) {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacci?n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacci?n
             Cita cita = em.find(Cita.class, id); // Busca la cita
             if (cita != null) {
                 em.remove(cita); // Elimina el registro de la BD (DELETE)
             }
             tx.commit(); // Confirma los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacci?n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace los cambios
             }
             throw new RuntimeException("Error al eliminar la cita", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexi?n
         }
     }
 
@@ -136,9 +136,9 @@ public class CitaController {
      */
     public void deleteAll() {
         EntityManager em = getEntityManager(); // Crea nuevo EntityManager
-        EntityTransaction tx = em.getTransaction(); // Obtiene la transacción
+        EntityTransaction tx = em.getTransaction(); // Obtiene la transacci?n
         try {
-            tx.begin(); // Inicia la transacción
+            tx.begin(); // Inicia la transacci?n
             // Primero elimina los registros de la tabla puente
             em.createNativeQuery("DELETE FROM Cita_Tratamiento").executeUpdate();
             // Luego elimina las citas
@@ -147,13 +147,13 @@ public class CitaController {
             em.createNativeQuery("ALTER TABLE clinica_dental.Cita AUTO_INCREMENT = 1").executeUpdate();
             tx.commit(); // Confirma todos los cambios
         } catch (Exception ex) {
-            // Si ocurre un error, revierte la transacción
+            // Si ocurre un error, revierte la transacci?n
             if (tx.isActive()) {
                 tx.rollback(); // Deshace todos los cambios
             }
             throw new RuntimeException("Error al eliminar todas las citas", ex);
         } finally {
-            em.close(); // Siempre cierra la conexión
+            em.close(); // Siempre cierra la conexi?n
         }
     }
 

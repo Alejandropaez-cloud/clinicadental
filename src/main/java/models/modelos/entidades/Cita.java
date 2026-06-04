@@ -22,9 +22,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Entidad que representa una cita en la clÃƒÂ­nica dental.
- * Cada cita estÃƒÂ¡ asociada a un paciente y a un doctor,
- * y puede contener varios tratamientos a travÃƒÂ©s de CitaTratamiento.
+ * Entidad que representa una cita en la clínica dental.
+ * Cada cita está asociada a un paciente y a un doctor,
+ * y puede contener varios tratamientos a través de CitaTratamiento.
  */
 @Entity
 @Table(name = "Cita")
@@ -36,7 +36,7 @@ import javax.persistence.TemporalType;
 })
 public class Cita implements Serializable {
 
-    private static final long serialVersionUID = 1L; // Identificador de versiÃƒÂ³n para Serial
+    private static final long serialVersionUID = 1L; // Identificador de versión para Serial
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +55,7 @@ public class Cita implements Serializable {
     @Basic(optional = false)
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
-    private Date fecha; // Fecha de la cita (solo dÃƒÂ­a)
+    private Date fecha; // Fecha de la cita (solo día)
 
     @Basic(optional = false)
     @Column(name = "horaInicio")
@@ -74,13 +74,13 @@ public class Cita implements Serializable {
     @Basic(optional = false)
     @Column(name = "fechaCreacion")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion; // Fecha y hora en que se creÃƒÂ³ el registro
+    private Date fechaCreacion; // Fecha y hora en que se creó el registro
 
     @OneToMany(mappedBy = "cita", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Collection<CitaTratamiento> citaTratamientoCollection; // Tratamientos asociados a la cita
 
     public Cita() {
-        this.citaTratamientoCollection = new ArrayList<>(); // Inicializa colecciÃƒÂ³n vacÃƒÂ­a
+        this.citaTratamientoCollection = new ArrayList<>(); // Inicializa colección vacía
     }
 
     public Cita(Integer codCita) {
@@ -96,7 +96,7 @@ public class Cita implements Serializable {
         this.horaInicio = horaInicio; // Asigna la hora de inicio
         this.horaFin = horaFin; // Asigna la hora de fin
         this.estado = estado; // Asigna el estado
-        this.fechaCreacion = new Date(); // Establece la fecha de creaciÃƒÂ³n actual
+        this.fechaCreacion = new Date(); // Establece la fecha de creación actual
     }
 
     public Integer getCodCita() {
@@ -156,11 +156,11 @@ public class Cita implements Serializable {
     }
 
     public Date getFechaCreacion() {
-        return fechaCreacion; // Retorna la fecha de creaciÃƒÂ³n
+        return fechaCreacion; // Retorna la fecha de creación
     }
 
     public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion; // Establece la fecha de creaciÃƒÂ³n
+        this.fechaCreacion = fechaCreacion; // Establece la fecha de creación
     }
 
     public Collection<CitaTratamiento> getCitaTratamientoCollection() {
@@ -168,15 +168,15 @@ public class Cita implements Serializable {
     }
 
     public void setCitaTratamientoCollection(Collection<CitaTratamiento> citaTratamientoCollection) {
-        this.citaTratamientoCollection = citaTratamientoCollection; // Asigna la colecciÃƒÂ³n
+        this.citaTratamientoCollection = citaTratamientoCollection; // Asigna la colección
         for (CitaTratamiento ct : citaTratamientoCollection) {
-            ct.setCita(this); // Sincroniza la relaciÃƒÂ³n inversa
+            ct.setCita(this); // Sincroniza la relación inversa
         }
     }
 
     public void addCitaTratamiento(CitaTratamiento citaTratamiento) {
-        this.citaTratamientoCollection.add(citaTratamiento); // AÃƒÂ±ade el tratamiento
-        citaTratamiento.setCita(this); // Sincroniza la relaciÃƒÂ³n inversa
+        this.citaTratamientoCollection.add(citaTratamiento); // Añade el tratamiento
+        citaTratamiento.setCita(this); // Sincroniza la relación inversa
     }
 
     public void removeCitaTratamiento(CitaTratamiento citaTratamiento) {
@@ -204,7 +204,7 @@ public class Cita implements Serializable {
     public String toString() {
         String tmp = ""; // Construye una lista de tratamientos
         for (CitaTratamiento ct : citaTratamientoCollection) {
-            tmp += ct + "\n"; // AÃƒÂ±ade cada tratamiento en nueva lÃƒÂ­nea
+            tmp += ct + "\n"; // Añade cada tratamiento en nueva línea
         }
         return "Cita{" + "codCita=" + codCita + ", paciente=" + (paciente != null ? paciente.getNombre() + " " + paciente.getApellidos() : "null")
                 + ", doctor=" + (doctor != null ? doctor.getNombre() : "null")

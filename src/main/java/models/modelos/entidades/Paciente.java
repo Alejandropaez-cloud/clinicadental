@@ -22,14 +22,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Entidad que representa a un paciente de la clÃƒÂ­nica dental.
- * Cada paciente puede tener un historial clÃƒÂ­nico (1:1) y varias citas (1:N).
+ * Entidad que representa a un paciente de la clínica dental.
+ * Cada paciente puede tener un historial clínico (1:1) y varias citas (1:N).
  */
 @Entity // Indica que esta clase es una entidad JPA y se mapea a una tabla de la BD
 @Table(name = "Paciente") // Nombre exacto de la tabla en la base de datos
 
 // Las NamedQueries son consultas predefinidas en JPQL que podemos reutilizar
-// desde el cÃƒÂ³digo sin escribir la consulta completa cada vez
+// desde el código sin escribir la consulta completa cada vez
 @NamedQueries({
     @NamedQuery(name = "Paciente.findAll", query = "SELECT p FROM Paciente p"),
     @NamedQuery(name = "Paciente.findById", query = "SELECT p FROM Paciente p WHERE p.codPaciente = :codPaciente"),
@@ -37,15 +37,15 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Paciente.findByNombre", query = "SELECT p FROM Paciente p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Paciente.findByApellidos", query = "SELECT p FROM Paciente p WHERE p.apellidos = :apellidos")
 })
-// Implementamos Serializable porque es una buena prÃƒÂ¡ctica en JPA,
+// Implementamos Serializable porque es una buena práctica en JPA,
 // aunque no es obligatorio. Sirve para poder serializar los objetos
-// (por ejemplo, si se envÃƒÂ­an por red o se guardan en sesiÃƒÂ³n)
+// (por ejemplo, si se envían por red o se guardan en sesión)
 public class Paciente implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     // @Id marca este campo como clave primaria de la tabla
-    // @GeneratedValue indica que el valor lo genera automÃƒÂ¡ticamente la BD
+    // @GeneratedValue indica que el valor lo genera automáticamente la BD
     // GenerationType.IDENTITY se usa con AUTO_INCREMENT en MySQL
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,28 +85,28 @@ public class Paciente implements Serializable {
     @Column(name = "direccion")
     private String direccion;
 
-    // RelaciÃƒÂ³n 1:1 con HistorialClinico
-    // mappedBy = "paciente" -> la otra entidad (HistorialClinico) es la dueÃƒÂ±a
-    // de la relaciÃƒÂ³n (tiene la FK). El nombre "paciente" es el atributo en
+    // Relación 1:1 con HistorialClinico
+    // mappedBy = "paciente" -> la otra entidad (HistorialClinico) es la dueña
+    // de la relación (tiene la FK). El nombre "paciente" es el atributo en
     // la clase HistorialClinico que hace referencia a esta entidad.
     // cascade = CascadeType.ALL -> todas las operaciones (persist, merge, remove...)
-    // se propagan al historial. Si guardo un Paciente, tambiÃƒÂ©n se guarda su Historial.
-    // orphanRemoval = true -> si elimino el historial de la colecciÃƒÂ³n (o lo pongo a null),
-    // tambiÃƒÂ©n se borra de la BD automÃƒÂ¡ticamente
+    // se propagan al historial. Si guardo un Paciente, también se guarda su Historial.
+    // orphanRemoval = true -> si elimino el historial de la colección (o lo pongo a null),
+    // también se borra de la BD automáticamente
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private HistorialClinico historialClinico;
 
-    // RelaciÃƒÂ³n 1:N con Cita (Un paciente puede tener muchas citas)
-    // mappedBy = "paciente" -> la entidad Cita es la dueÃƒÂ±a de la relaciÃƒÂ³n
+    // Relación 1:N con Cita (Un paciente puede tener muchas citas)
+    // mappedBy = "paciente" -> la entidad Cita es la dueña de la relación
     // (la tabla Cita tiene la FK codPaciente)
-    // cascade = CascadeType.PERSIST -> al persistir un Paciente, tambiÃƒÂ©n se
-    // persistirÃƒÂ¡n sus Citas asociadas
-    // orphanRemoval = true -> si elimino una Cita de la colecciÃƒÂ³n del Paciente,
-    // esa Cita se elimina automÃƒÂ¡ticamente de la BD
+    // cascade = CascadeType.PERSIST -> al persistir un Paciente, también se
+    // persistirán sus Citas asociadas
+    // orphanRemoval = true -> si elimino una Cita de la colección del Paciente,
+    // esa Cita se elimina automáticamente de la BD
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Collection<Cita> citaCollection;
 
-    // Constructor vacÃƒÂ­o (obligatorio para JPA)
+    // Constructor vacío (obligatorio para JPA)
     public Paciente() {
     }
 
@@ -121,7 +121,7 @@ public class Paciente implements Serializable {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;
-        this.citaCollection = new ArrayList<>(); // Inicializamos la colecciÃƒÂ³n vacÃƒÂ­a
+        this.citaCollection = new ArrayList<>(); // Inicializamos la colección vacía
     }
 
     // Getters y setters ------------------------------------------------
@@ -193,7 +193,7 @@ public class Paciente implements Serializable {
         return historialClinico;
     }
 
-    // Al establecer el historial, tambiÃƒÂ©n sincronizamos la relaciÃƒÂ³n
+    // Al establecer el historial, también sincronizamos la relación
     // bidireccional: le decimos al historial que su paciente es este
     public void setHistorialClinico(HistorialClinico historialClinico) {
         this.historialClinico = historialClinico;
@@ -203,36 +203,36 @@ public class Paciente implements Serializable {
     }
 
     public Collection<Cita> getCitaCollection() {
-        return citaCollection; // Retorna la colecciÃƒÂ³n de citas del paciente
+        return citaCollection; // Retorna la colección de citas del paciente
     }
 
-    // Establece la colecciÃƒÂ³n de citas y sincroniza la relaciÃƒÂ³n bidireccional
-    // Al asignar una colecciÃƒÂ³n de citas, tambiÃƒÂ©n actualiza el lado inverso
+    // Establece la colección de citas y sincroniza la relación bidireccional
+    // Al asignar una colección de citas, también actualiza el lado inverso
     public void setCitaCollection(Collection<Cita> citaCollection) {
-        this.citaCollection = citaCollection; // Asigna la nueva colecciÃƒÂ³n
+        this.citaCollection = citaCollection; // Asigna la nueva colección
         // Sincroniza el lado inverso: cada Cita debe saber que pertenece a este Paciente
         for (Cita cita : citaCollection) {
             cita.setPaciente(this);
         }
     }
 
-    // Agrega una cita al paciente y sincroniza la relaciÃƒÂ³n bidireccional
+    // Agrega una cita al paciente y sincroniza la relación bidireccional
     public void addCita(Cita cita) {
-        this.citaCollection.add(cita); // AÃƒÂ±ade a la colecciÃƒÂ³n local
+        this.citaCollection.add(cita); // Añade a la colección local
         cita.setPaciente(this); // Sincroniza el lado inverso
     }
 
-    // Elimina una cita del paciente y limpia la relaciÃƒÂ³n bidireccional
+    // Elimina una cita del paciente y limpia la relación bidireccional
     public void removeCita(Cita cita) {
-        this.citaCollection.remove(cita); // Elimina de la colecciÃƒÂ³n local
+        this.citaCollection.remove(cita); // Elimina de la colección local
         cita.setPaciente(null); // Limpia la referencia inversa
     }
 
-    // Calcula el cÃƒÂ³digo hash basado en el ID del paciente
+    // Calcula el código hash basado en el ID del paciente
     @Override
     public int hashCode() {
         int hash = 0; // Inicializa el hash
-        // Si el ID no es nulo, suma su cÃƒÂ³digo hash
+        // Si el ID no es nulo, suma su código hash
         hash += (codPaciente != null ? codPaciente.hashCode() : 0);
         return hash; // Retorna el hash calculado
     }
@@ -250,11 +250,11 @@ public class Paciente implements Serializable {
                  (this.codPaciente != null && !this.codPaciente.equals(other.codPaciente)));
     }
 
-    // Retorna una representaciÃƒÂ³n en texto del paciente
+    // Retorna una representación en texto del paciente
     @Override
     public String toString() {
         String tmp = ""; // Variable temporal para el historial
-        // Si existe historial, lo agrega a la representaciÃƒÂ³n
+        // Si existe historial, lo agrega a la representación
         if (historialClinico != null) {
             tmp += historialClinico + "\n";
         }

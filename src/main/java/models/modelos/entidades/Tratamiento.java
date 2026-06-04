@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 /**
  * Entidad que representa un tratamiento dental (ej: limpieza, ortodoncia, endodoncia...).
- * Un tratamiento puede estar en muchas citas (relaciÃƒÂ³n N:M con Cita a travÃƒÂ©s de CitaTratamiento).
+ * Un tratamiento puede estar en muchas citas (relación N:M con Cita a través de CitaTratamiento).
  */
 @Entity
 @Table(name = "Tratamiento")
@@ -29,12 +29,12 @@ import javax.persistence.Table;
 })
 public class Tratamiento implements Serializable {
 
-    // ID ÃƒÂºnico de serializaciÃƒÂ³n usado para persistencia
+    // ID único de serialización usado para persistencia
     private static final long serialVersionUID = 1L;
 
     // Clave primaria autoincrementada del tratamiento
     @Id // Marca como clave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automÃƒÂ¡ticamente el valor
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // La BD genera automáticamente el valor
     @Basic(optional = false) // Campo obligatorio
     @Column(name = "codTratamiento") // Nombre de la columna en la BD
     private Integer codTratamiento;
@@ -44,7 +44,7 @@ public class Tratamiento implements Serializable {
     @Column(name = "NombreTratamiento") // Nombre de la columna en la BD
     private String nombreTratamiento;
 
-    // DescripciÃƒÂ³n detallada del tratamiento
+    // Descripción detallada del tratamiento
     @Column(name = "Descripcion") // TEXT en MySQL se mapea como String
     private String descripcion;
 
@@ -53,44 +53,44 @@ public class Tratamiento implements Serializable {
     @Column(name = "PrecioEstimado") // Nombre de la columna en la BD
     private Double precioEstimado;
 
-    // DuraciÃƒÂ³n estimada del tratamiento en minutos
+    // Duración estimada del tratamiento en minutos
     @Basic(optional = false) // Campo obligatorio
     @Column(name = "DuracionMinutos") // Nombre de la columna en la BD
     private Integer duracionMinutos;
 
-    // RelaciÃƒÂ³n 1:N con CitaTratamiento (tabla puente para relaciÃƒÂ³n N:M con Cita)
-    // Un tratamiento puede estar asociado a muchas citas a travÃƒÂ©s de CitaTratamiento
+    // Relación 1:N con CitaTratamiento (tabla puente para relación N:M con Cita)
+    // Un tratamiento puede estar asociado a muchas citas a través de CitaTratamiento
     @OneToMany(
         mappedBy = "tratamiento", // El lado no propietario: la entidad CitaTratamiento tiene el atributo "tratamiento"
-        cascade = CascadeType.PERSIST, // Propagar la operaciÃƒÂ³n persist a los CitaTratamiento
-        orphanRemoval = true // Eliminar CitaTratamiento de la BD si se remove de la colecciÃƒÂ³n
+        cascade = CascadeType.PERSIST, // Propagar la operación persist a los CitaTratamiento
+        orphanRemoval = true // Eliminar CitaTratamiento de la BD si se remove de la colección
     )
     private Collection<CitaTratamiento> citaTratamientoCollection;
 
-    // Constructor vacÃƒÂ­o requerido por JPA
+    // Constructor vacío requerido por JPA
     public Tratamiento() {
     }
 
-    // Constructor con solo el ID (usado para bÃƒÂºsquedas)
+    // Constructor con solo el ID (usado para búsquedas)
     public Tratamiento(Integer codTratamiento) {
         this.codTratamiento = codTratamiento; // Asigna el ID
     }
 
-    // Constructor con parÃƒÂ¡metros (usado al crear un nuevo tratamiento)
+    // Constructor con parámetros (usado al crear un nuevo tratamiento)
     public Tratamiento(String nombreTratamiento, String descripcion, Double precioEstimado, Integer duracionMinutos) {
         this.nombreTratamiento = nombreTratamiento; // Asigna el nombre
-        this.descripcion = descripcion; // Asigna la descripciÃƒÂ³n
+        this.descripcion = descripcion; // Asigna la descripción
         this.precioEstimado = precioEstimado; // Asigna el precio
-        this.duracionMinutos = duracionMinutos; // Asigna la duraciÃƒÂ³n
-        this.citaTratamientoCollection = new ArrayList<>(); // Inicializa la colecciÃƒÂ³n vacÃƒÂ­a
+        this.duracionMinutos = duracionMinutos; // Asigna la duración
+        this.citaTratamientoCollection = new ArrayList<>(); // Inicializa la colección vacía
     }
 
-    // Obtiene el cÃƒÂ³digo (ID) del tratamiento
+    // Obtiene el código (ID) del tratamiento
     public Integer getCodTratamiento() {
         return codTratamiento;
     }
 
-    // Establece el cÃƒÂ³digo (ID) del tratamiento
+    // Establece el código (ID) del tratamiento
     public void setCodTratamiento(Integer codTratamiento) {
         this.codTratamiento = codTratamiento;
     }
@@ -105,12 +105,12 @@ public class Tratamiento implements Serializable {
         this.nombreTratamiento = nombreTratamiento;
     }
 
-    // Obtiene la descripciÃƒÂ³n del tratamiento
+    // Obtiene la descripción del tratamiento
     public String getDescripcion() {
         return descripcion;
     }
 
-    // Establece la descripciÃƒÂ³n del tratamiento
+    // Establece la descripción del tratamiento
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
@@ -125,47 +125,47 @@ public class Tratamiento implements Serializable {
         this.precioEstimado = precioEstimado;
     }
 
-    // Obtiene la duraciÃƒÂ³n estimada en minutos
+    // Obtiene la duración estimada en minutos
     public Integer getDuracionMinutos() {
         return duracionMinutos;
     }
 
-    // Establece la duraciÃƒÂ³n estimada en minutos
+    // Establece la duración estimada en minutos
     public void setDuracionMinutos(Integer duracionMinutos) {
         this.duracionMinutos = duracionMinutos;
     }
 
-    // Obtiene la colecciÃƒÂ³n de registros CitaTratamiento asociados
+    // Obtiene la colección de registros CitaTratamiento asociados
     public Collection<CitaTratamiento> getCitaTratamientoCollection() {
         return citaTratamientoCollection;
     }
 
-    // Establece la colecciÃƒÂ³n de CitaTratamiento y sincroniza la relaciÃƒÂ³n bidireccional
+    // Establece la colección de CitaTratamiento y sincroniza la relación bidireccional
     public void setCitaTratamientoCollection(Collection<CitaTratamiento> citaTratamientoCollection) {
-        this.citaTratamientoCollection = citaTratamientoCollection; // Asigna la nueva colecciÃƒÂ³n
+        this.citaTratamientoCollection = citaTratamientoCollection; // Asigna la nueva colección
         // Sincroniza el lado inverso: cada CitaTratamiento debe saber que pertenece a este Tratamiento
         for (CitaTratamiento ct : citaTratamientoCollection) {
             ct.setTratamiento(this);
         }
     }
 
-    // Agrega un CitaTratamiento a esta colecciÃƒÂ³n y sincroniza la relaciÃƒÂ³n
+    // Agrega un CitaTratamiento a esta colección y sincroniza la relación
     public void addCitaTratamiento(CitaTratamiento citaTratamiento) {
-        this.citaTratamientoCollection.add(citaTratamiento); // AÃƒÂ±ade a la colecciÃƒÂ³n local
+        this.citaTratamientoCollection.add(citaTratamiento); // Añade a la colección local
         citaTratamiento.setTratamiento(this); // Sincroniza el lado inverso
     }
 
-    // Elimina un CitaTratamiento de esta colecciÃƒÂ³n y limpia la relaciÃƒÂ³n
+    // Elimina un CitaTratamiento de esta colección y limpia la relación
     public void removeCitaTratamiento(CitaTratamiento citaTratamiento) {
-        this.citaTratamientoCollection.remove(citaTratamiento); // Elimina de la colecciÃƒÂ³n local
+        this.citaTratamientoCollection.remove(citaTratamiento); // Elimina de la colección local
         citaTratamiento.setTratamiento(null); // Limpia la referencia inversa
     }
 
-    // Calcula el cÃƒÂ³digo hash basado en el ID del tratamiento
+    // Calcula el código hash basado en el ID del tratamiento
     @Override
     public int hashCode() {
         int hash = 0; // Inicializa el hash
-        // Si el ID no es nulo, suma su cÃƒÂ³digo hash
+        // Si el ID no es nulo, suma su código hash
         hash += (codTratamiento != null ? codTratamiento.hashCode() : 0);
         return hash; // Retorna el hash calculado
     }
@@ -183,7 +183,7 @@ public class Tratamiento implements Serializable {
                  (this.codTratamiento != null && !this.codTratamiento.equals(other.codTratamiento)));
     }
 
-    // Retorna una representaciÃƒÂ³n en texto del tratamiento
+    // Retorna una representación en texto del tratamiento
     @Override
     public String toString() {
         // Retorna una cadena con los datos principales del tratamiento
