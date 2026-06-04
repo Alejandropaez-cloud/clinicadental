@@ -10,7 +10,7 @@ import java.util.List; // Listas de entidades
 
 /**
  * Panel que administra la vista de Historial Clinico.
- * Permite listar, crear, editar y eliminar registros de historial clÃƒÂ­nico.
+ * Permite listar, crear, editar y eliminar registros de historial clínico.
  */
 public class HistorialClinicoPanel extends JPanel {
 
@@ -48,7 +48,7 @@ public class HistorialClinicoPanel extends JPanel {
             public boolean isCellEditable(int r, int c) { return false; } // Evita edición directa
         };
         table = new JTable(model); // Crea tabla
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección ÃƒÂºnica
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección única
         table.getTableHeader().setBackground(azul); // Encabezado azul
         table.getTableHeader().setForeground(blanco); // Texto blanco
         table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f)); // Fuente del encabezado
@@ -133,7 +133,7 @@ public class HistorialClinicoPanel extends JPanel {
         JButton btnOk = new JButton("Guardar"); // Botón guardar
         btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false); // Estilo botón guardar
         JButton btnCancel = new JButton("Cancelar"); // Botón cancelar
-        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false); // Estilo botÃƒÂ³n cancelar
+        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false); // Estilo botón cancelar
         btnOk.addActionListener(e -> {
             try {
                 if (historial == null) { // Creación
@@ -159,30 +159,30 @@ public class HistorialClinicoPanel extends JPanel {
                 JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage()); // Muestra error
             }
         });
-        btnCancel.addActionListener(e -> d.dispose()); // Cierra diÃƒÂ¡logo
-        pnlBtn.add(btnOk); // AÃƒÂ±ade botÃƒÂ³n Guardar
-        pnlBtn.add(btnCancel); // AÃƒÂ±ade botÃƒÂ³n Cancelar
+        btnCancel.addActionListener(e -> d.dispose()); // Cierra diálogo
+        pnlBtn.add(btnOk); // Añade botón Guardar
+        pnlBtn.add(btnCancel); // Añade botón Cancelar
         d.add(pnlBtn, BorderLayout.SOUTH); // Agrega botones en la parte inferior
-        d.setVisible(true); // Muestra el diÃƒÂ¡logo
+        d.setVisible(true); // Muestra el diálogo
     }
 
     /**
-     * Abre el diÃƒÂ¡logo de ediciÃƒÂ³n para el historial seleccionado.
+     * Abre el diálogo de edición para el historial seleccionado.
      */
     private void editar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selecciÃƒÂ³n
-        dialogo(controller.findById((Integer) model.getValueAt(row, 0))); // Abre diÃƒÂ¡logo con historial seleccionado
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selección
+        dialogo(controller.findById((Integer) model.getValueAt(row, 0))); // Abre diálogo con historial seleccionado
     }
 
     /**
-     * Elimina el historial seleccionado despuÃƒÂ©s de pedir confirmaciÃƒÂ³n.
+     * Elimina el historial seleccionado después de pedir confirmación.
      */
     private void eliminar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selecciÃƒÂ³n
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona un historial"); return; } // Valida selección
         if (JOptionPane.showConfirmDialog(this, "Eliminar historial?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminaciÃƒÂ³n
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminación
             controller.delete((Integer) model.getValueAt(row, 0)); // Elimina historial
             loadData(); // Recarga tabla
         }

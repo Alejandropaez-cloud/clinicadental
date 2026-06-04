@@ -1,4 +1,4 @@
-package views;
+﻿package views;
 
 import controllers.controladores.TratamientoController; // Controlador CRUD de tratamientos
 import models.modelos.entidades.Tratamiento; // Entidad Tratamiento
@@ -35,11 +35,11 @@ public class TratamientoPanel extends JPanel {
      * Construye los componentes visuales del panel de tratamientos.
      */
     private void initComponents() {
-        JLabel titulo = new JLabel("TRATAMIENTOS", SwingConstants.CENTER); // Tí­tulo del panel
+        JLabel titulo = new JLabel("TRATAMIENTOS", SwingConstants.CENTER); // Título del panel
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente en negrita
         titulo.setForeground(azul); // Texto azul
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior/inferior
-        add(titulo, BorderLayout.NORTH); // Agrega el tí­tulo arriba
+        add(titulo, BorderLayout.NORTH); // Agrega el Título arriba
 
         String[] cols = {"ID", "Nombre", "Descripción", "Precio", "Duración (min)"}; // Columnas de la tabla
         model = new DefaultTableModel(cols, 0) { // Modelo de tabla no editable
@@ -120,7 +120,7 @@ public class TratamientoPanel extends JPanel {
 
         form.add(new JLabel("Nombre:")); form.add(txtNom); // Etiqueta y campo nombre
         form.add(new JLabel("Descripcion:")); form.add(txtDesc); // Etiqueta y campo descripción
-        form.add(new JLabel("Precio (Ã¢â€šÂ¬):")); form.add(txtPre); // Etiqueta y campo precio
+        form.add(new JLabel("Precio (€):")); form.add(txtPre); // Etiqueta y campo precio
         form.add(new JLabel("Duracion (min):")); form.add(txtDur); // Etiqueta y campo duración
         d.add(form, BorderLayout.CENTER); // Agrega el formulario al centro
 
@@ -169,7 +169,7 @@ public class TratamientoPanel extends JPanel {
     }
 
     /**
-     * Elimina el tratamiento seleccionado despuÃƒÂ©s de pedir confirmación.
+     * Elimina el tratamiento seleccionado después de pedir confirmación.
      */
     private void eliminar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada

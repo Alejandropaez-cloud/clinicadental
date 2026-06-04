@@ -14,7 +14,7 @@ import java.util.List; // Colecciones de objetos
 
 /**
  * Panel que administra la vista de Citas.
- * Permite gestionar citas programadas y su informaciÃƒÂ³n asociada.
+ * Permite gestionar citas programadas y su información asociada.
  */
 public class CitaPanel extends JPanel {
 
@@ -46,18 +46,18 @@ public class CitaPanel extends JPanel {
      * Inicializa los controles visuales del panel de citas.
      */
     private void initComponents() {
-        JLabel titulo = new JLabel("CITAS", SwingConstants.CENTER); // TÃƒÂ­tulo centrado
+        JLabel titulo = new JLabel("CITAS", SwingConstants.CENTER); // Título centrado
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente en negrita
         titulo.setForeground(azul); // Color azul del texto
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior e inferior
-        add(titulo, BorderLayout.NORTH); // Agrega el tÃƒÂ­tulo en la parte superior
+        add(titulo, BorderLayout.NORTH); // Agrega el título en la parte superior
 
         String[] cols = {"ID", "Paciente", "Doctor", "Fecha", "Hora Inicio", "Hora Fin", "Estado"}; // Columnas de la tabla
         model = new DefaultTableModel(cols, 0) { // Modelo de tabla sin celdas editables
-            public boolean isCellEditable(int r, int c) { return false; } // Evita ediciÃƒÂ³n en la tabla
+            public boolean isCellEditable(int r, int c) { return false; } // Evita edición en la tabla
         };
         table = new JTable(model); // Crea la tabla
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // SelecciÃƒÂ³n ÃƒÂºnica
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección única
         table.getTableHeader().setBackground(azul); // Encabezados azules
         table.getTableHeader().setForeground(blanco); // Texto blanco en encabezado
         table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f)); // Fuente en encabezado
@@ -67,9 +67,9 @@ public class CitaPanel extends JPanel {
         JPanel pnl = new JPanel(); // Panel de botones en la parte inferior
         pnl.setBackground(new Color(240, 245, 250)); // Fondo del panel de botones
         pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0)); // Margen interno
-        JButton btnNew = new JButton("Nuevo"); // BotÃƒÂ³n para nueva cita
-        JButton btnEdit = new JButton("Editar"); // BotÃƒÂ³n para editar cita seleccionada
-        JButton btnDel = new JButton("Eliminar"); // BotÃƒÂ³n para eliminar cita seleccionada
+        JButton btnNew = new JButton("Nuevo"); // Botón para nueva cita
+        JButton btnEdit = new JButton("Editar"); // Botón para editar cita seleccionada
+        JButton btnDel = new JButton("Eliminar"); // Botón para eliminar cita seleccionada
         btnNew.setBackground(azul); // Fondo azul
         btnNew.setForeground(blanco); // Texto blanco
         btnNew.setFocusPainted(false); // Sin borde de enfoque
@@ -79,12 +79,12 @@ public class CitaPanel extends JPanel {
         btnDel.setBackground(new Color(244, 67, 54)); // Fondo rojo
         btnDel.setForeground(blanco); // Texto blanco
         btnDel.setFocusPainted(false); // Sin borde de enfoque
-        btnNew.addActionListener(e -> dialogo(null)); // Abre diÃƒÂ¡logo para nueva cita
-        btnEdit.addActionListener(e -> editar()); // Abre diÃƒÂ¡logo para editar
+        btnNew.addActionListener(e -> dialogo(null)); // Abre diálogo para nueva cita
+        btnEdit.addActionListener(e -> editar()); // Abre diálogo para editar
         btnDel.addActionListener(e -> eliminar()); // Elimina cita seleccionada
-        pnl.add(btnNew); // AÃƒÂ±ade botÃƒÂ³n Nuevo
-        pnl.add(btnEdit); // AÃƒÂ±ade botÃƒÂ³n Editar
-        pnl.add(btnDel); // AÃƒÂ±ade botÃƒÂ³n Eliminar
+        pnl.add(btnNew); // Añade botón Nuevo
+        pnl.add(btnEdit); // Añade botón Editar
+        pnl.add(btnDel); // Añade botón Eliminar
         add(pnl, BorderLayout.SOUTH); // Agrega el panel de botones al sur
     }
 
@@ -107,26 +107,26 @@ public class CitaPanel extends JPanel {
     }
 
     /**
-     * Abre un diÃƒÂ¡logo para crear o editar una cita.
+     * Abre un diálogo para crear o editar una cita.
      * Permite seleccionar paciente, doctor, fecha, horas y estado.
      */
     private void dialogo(Cita cita) {
         JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
-                cita == null ? "Nueva Cita" : "Editar Cita", true); // DiÃƒÂ¡logo modal
-        d.setSize(350, 300); // TamaÃƒÂ±o del diÃƒÂ¡logo
-        d.setLocationRelativeTo(this); // Centra el diÃƒÂ¡logo respecto al panel
-        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo del diÃƒÂ¡logo
+                cita == null ? "Nueva Cita" : "Editar Cita", true); // Diálogo modal
+        d.setSize(350, 300); // Tamaño del diálogo
+        d.setLocationRelativeTo(this); // Centra el diálogo respecto al panel
+        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo del diálogo
 
         List<Paciente> pacientes = pacienteController.findAll(); // Lista de pacientes
         List<Doctor> doctores = doctorController.findAll(); // Lista de doctores
 
         JComboBox<String> cmbPac = new JComboBox<>(); // Combo con pacientes
         for (Paciente p : pacientes)
-            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos()); // AÃƒÂ±ade cada paciente
+            cmbPac.addItem(p.getCodPaciente() + " - " + p.getNombre() + " " + p.getApellidos()); // Añade cada paciente
 
         JComboBox<String> cmbDoc = new JComboBox<>(); // Combo con doctores
         for (Doctor doc : doctores)
-            cmbDoc.addItem(doc.getCodDoctor() + " - " + doc.getNombre()); // AÃƒÂ±ade cada doctor
+            cmbDoc.addItem(doc.getCodDoctor() + " - " + doc.getNombre()); // Añade cada doctor
 
         JTextField txtFecha = new JTextField(); // Campo de fecha
         JTextField txtHoraIni = new JTextField(); // Campo de hora inicio
@@ -158,18 +158,18 @@ public class CitaPanel extends JPanel {
 
         JPanel pnlBtn = new JPanel(); // Panel de botones
         pnlBtn.setBackground(new Color(240, 245, 250)); // Fondo del panel
-        JButton btnOk = new JButton("Guardar"); // BotÃƒÂ³n guardar
+        JButton btnOk = new JButton("Guardar"); // Botón guardar
         btnOk.setBackground(azul); // Fondo azul
         btnOk.setForeground(blanco); // Texto blanco
         btnOk.setFocusPainted(false); // Sin borde de enfoque
-        JButton btnCancel = new JButton("Cancelar"); // BotÃƒÂ³n cancelar
+        JButton btnCancel = new JButton("Cancelar"); // Botón cancelar
         btnCancel.setBackground(new Color(158, 158, 158)); // Fondo gris
         btnCancel.setForeground(blanco); // Texto blanco
         btnCancel.setFocusPainted(false); // Sin borde de enfoque
         btnOk.addActionListener(e -> {
             try {
-                int iPac = cmbPac.getSelectedIndex(); // ÃƒÂndice de paciente seleccionado
-                int iDoc = cmbDoc.getSelectedIndex(); // ÃƒÂndice de doctor seleccionado
+                int iPac = cmbPac.getSelectedIndex(); // Índice de paciente seleccionado
+                int iDoc = cmbDoc.getSelectedIndex(); // Índice de doctor seleccionado
                 if (cita == null) { // Si se crea una cita nueva
                     Cita n = new Cita(pacientes.get(iPac), doctores.get(iDoc),
                             sdfFecha.parse(txtFecha.getText()), sdfHora.parse(txtHoraIni.getText()),
@@ -185,35 +185,35 @@ public class CitaPanel extends JPanel {
                     citaController.update(cita); // Guarda cambios
                 }
                 loadData(); // Recarga la tabla
-                d.dispose(); // Cierra el diÃƒÂ¡logo
+                d.dispose(); // Cierra el diálogo
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage()); // Muestra mensaje de error
             }
         });
-        btnCancel.addActionListener(e -> d.dispose()); // Cierra el diÃƒÂ¡logo sin guardar
-        pnlBtn.add(btnOk); // AÃƒÂ±ade botÃƒÂ³n Guardar
-        pnlBtn.add(btnCancel); // AÃƒÂ±ade botÃƒÂ³n Cancelar
+        btnCancel.addActionListener(e -> d.dispose()); // Cierra el diálogo sin guardar
+        pnlBtn.add(btnOk); // Añade botón Guardar
+        pnlBtn.add(btnCancel); // Añade botón Cancelar
         d.add(pnlBtn, BorderLayout.SOUTH); // Agrega el panel de botones al pie
-        d.setVisible(true); // Muestra el diÃƒÂ¡logo
+        d.setVisible(true); // Muestra el diálogo
     }
 
     /**
-     * Abre el diÃƒÂ¡logo de ediciÃƒÂ³n para la cita seleccionada.
+     * Abre el diálogo de edición para la cita seleccionada.
      */
     private void editar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selecciÃƒÂ³n
-        dialogo(citaController.findById((Integer) model.getValueAt(row, 0))); // Abre diÃƒÂ¡logo con la cita seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selección
+        dialogo(citaController.findById((Integer) model.getValueAt(row, 0))); // Abre diálogo con la cita seleccionada
     }
 
     /**
-     * Elimina la cita seleccionada tras pedir confirmaciÃƒÂ³n.
+     * Elimina la cita seleccionada tras pedir confirmación.
      */
     private void eliminar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selecciÃƒÂ³n
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una cita"); return; } // Valida selección
         if (JOptionPane.showConfirmDialog(this, "Eliminar cita?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminaciÃƒÂ³n
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminación
             citaController.delete((Integer) model.getValueAt(row, 0)); // Elimina la cita por ID
             loadData(); // Recarga la tabla
         }

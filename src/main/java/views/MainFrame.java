@@ -1,9 +1,9 @@
 package views;
 
 import util.BackupUtil; // Importa utilidades de copia de seguridad
-import javax.swing.*; // Importa componentes grÃƒÂ¡ficos Swing
-import javax.swing.border.EmptyBorder; // Importa para bordes vacÃƒÂ­os
-import java.awt.*; // Importa clases de diseÃƒÂ±o grÃƒÂ¡fico
+import javax.swing.*; // Importa componentes gráficos Swing
+import javax.swing.border.EmptyBorder; // Importa para bordes vacíos
+import java.awt.*; // Importa clases de diseño gráfico
 
 /**
  * Ventana principal de la aplicación.
@@ -16,7 +16,7 @@ public class MainFrame extends JFrame {
     private final DoctorPanel pnlDoctor = new DoctorPanel(); // Panel para gestionar doctores
     private final CitaPanel pnlCita = new CitaPanel(); // Panel para gestionar citas
     private final TratamientoPanel pnlTratamiento = new TratamientoPanel(); // Panel para gestionar tratamientos
-    private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel(); // Panel para gestionar historiales clÃƒÂ­nicos
+    private final HistorialClinicoPanel pnlHistorial = new HistorialClinicoPanel(); // Panel para gestionar historiales clínicos
     private final CitaTratamientoPanel pnlCitaTratamiento = new CitaTratamientoPanel(); // Panel para gestionar la relación cita-tratamiento
 
     private final CardLayout cardLayout = new CardLayout(); // Layout para cambiar entre paneles
@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
         panelCentral.add(pnlCitaTratamiento, "CitaTratamiento"); // Agrega el panel de relación cita-tratamiento
 
         JPanel nav = new JPanel(new GridLayout(6, 1, 5, 12)); // Panel de navegación con 6 filas y 1 columna
-        nav.setBackground(azul); // Fondo azul para navegaciÃƒÂ³n
+        nav.setBackground(azul); // Fondo azul para navegación
         nav.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // Margen interno del panel de navegación
 
         String[] names = {"Pacientes", "Doctores", "Citas", "Tratamientos", "Historial", "Cita-Tratamiento"}; // Texto de botones
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
 
             String key = keys[i]; // Clave asociada al panel
             btn.addActionListener(e -> cardLayout.show(panelCentral, key)); // Muestra el panel correspondiente al pulsar
-            nav.add(btn); // AÃƒÂ±ade el botón al panel de navegación
+            nav.add(btn); // Añade el botón al panel de navegación
         }
 
         JPanel bottom = new JPanel(); // Panel inferior para acciones globales

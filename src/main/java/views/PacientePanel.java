@@ -42,7 +42,7 @@ public class PacientePanel extends JPanel {
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente en negrita y tamaño 18
         titulo.setForeground(azul); // Texto azul
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior e inferior
-        add(titulo, BorderLayout.NORTH); // Agrega el tÃƒÂ­tulo en la parte superior
+        add(titulo, BorderLayout.NORTH); // Agrega el título en la parte superior
 
         String[] cols = {"ID", "DNI", "Nombre", "Apellidos", "Fecha Nac.", "Telefono", "Email", "Direccion"}; // Columnas de la tabla
         model = new DefaultTableModel(cols, 0) { // Modelo no editable
@@ -82,7 +82,7 @@ public class PacientePanel extends JPanel {
 
     /**
      * Carga los pacientes desde la base de datos y los muestra en la tabla.
-     * Se vacÃƒÂ­a el modelo previamente para evitar duplicados.
+     * Se vacía el modelo previamente para evitar duplicados.
      */
     public void loadData() {
         model.setRowCount(0); // Elimina todas las filas actuales
@@ -161,7 +161,7 @@ public class PacientePanel extends JPanel {
                     n.setEmail(txtEmail.getText()); // Asigna email
                     n.setDireccion(txtDir.getText()); // Asigna dirección
                     controller.create(n); // Inserta paciente en la base de datos
-                } else { // Si se estÃƒÂ¡ editando un paciente existente
+                } else { // Si se está editando un paciente existente
                     paciente.setDni(txtDni.getText()); // Actualiza DNI
                     paciente.setNombre(txtNom.getText()); // Actualiza nombre
                     paciente.setApellidos(txtApe.getText()); // Actualiza apellidos
@@ -178,8 +178,8 @@ public class PacientePanel extends JPanel {
             }
         });
         btnCancel.addActionListener(e -> d.dispose()); // Cierra el dialogo sin guardar cambios
-        pnlBtn.add(btnOk); // AÃƒÂ±ade botón Guardar
-        pnlBtn.add(btnCancel); // AÃƒÂ±ade botón Cancelar
+        pnlBtn.add(btnOk); // Añade botón Guardar
+        pnlBtn.add(btnCancel); // Añade botón Cancelar
         d.add(pnlBtn, BorderLayout.SOUTH); // Agrega panel de botones al pie del dialogo
         d.setVisible(true); // Muestra el dialogo al usuario
     }

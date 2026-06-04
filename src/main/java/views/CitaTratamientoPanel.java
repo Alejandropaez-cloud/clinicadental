@@ -35,18 +35,18 @@ public class CitaTratamientoPanel extends JPanel {
      * Inicializa los componentes visuales del panel.
      */
     private void initComponents() {
-        JLabel titulo = new JLabel("CITA-TRATAMIENTO", SwingConstants.CENTER); // TÃƒÂ­tulo centrado
+        JLabel titulo = new JLabel("CITA-TRATAMIENTO", SwingConstants.CENTER); // Título centrado
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 18f)); // Fuente negrita
         titulo.setForeground(azul); // Texto azul
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior/inferior
-        add(titulo, BorderLayout.NORTH); // Agrega tÃƒÂ­tulo arriba
+        add(titulo, BorderLayout.NORTH); // Agrega título arriba
 
         String[] cols = {"ID", "Cita", "Tratamiento", "Cantidad"}; // Columnas de la tabla
         model = new DefaultTableModel(cols, 0) { // Modelo lecturizable
-            public boolean isCellEditable(int r, int c) { return false; } // Evita ediciÃƒÂ³n directa
+            public boolean isCellEditable(int r, int c) { return false; } // Evita edición directa
         };
         table = new JTable(model); // Crea tabla
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // SelecciÃƒÂ³n ÃƒÂºnica
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección única
         table.getTableHeader().setBackground(azul); // Encabezado azul
         table.getTableHeader().setForeground(blanco); // Texto blanco
         table.getTableHeader().setFont(table.getFont().deriveFont(Font.BOLD, 12f)); // Fuente encabezado
@@ -56,18 +56,18 @@ public class CitaTratamientoPanel extends JPanel {
         JPanel pnl = new JPanel(); // Panel de botones
         pnl.setBackground(new Color(240, 245, 250)); // Fondo panel
         pnl.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0)); // Margen panel
-        JButton btnNew = new JButton("Nuevo"); // BotÃƒÂ³n nuevo
-        JButton btnEdit = new JButton("Editar"); // BotÃƒÂ³n editar
-        JButton btnDel = new JButton("Eliminar"); // BotÃƒÂ³n eliminar
-        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false); // Estilo botÃƒÂ³n nuevo
-        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false); // Estilo botÃƒÂ³n editar
-        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false); // Estilo botÃƒÂ³n eliminar
-        btnNew.addActionListener(e -> dialogo(null)); // Abre diÃƒÂ¡logo para nueva relaciÃƒÂ³n
-        btnEdit.addActionListener(e -> editar()); // Edita relaciÃƒÂ³n seleccionada
-        btnDel.addActionListener(e -> eliminar()); // Elimina relaciÃƒÂ³n seleccionada
-        pnl.add(btnNew); // AÃƒÂ±ade botÃƒÂ³n Nuevo
-        pnl.add(btnEdit); // AÃƒÂ±ade botÃƒÂ³n Editar
-        pnl.add(btnDel); // AÃƒÂ±ade botÃƒÂ³n Eliminar
+        JButton btnNew = new JButton("Nuevo"); // Botón nuevo
+        JButton btnEdit = new JButton("Editar"); // Botón editar
+        JButton btnDel = new JButton("Eliminar"); // Botón eliminar
+        btnNew.setBackground(azul); btnNew.setForeground(blanco); btnNew.setFocusPainted(false); // Estilo botón nuevo
+        btnEdit.setBackground(new Color(255, 152, 0)); btnEdit.setForeground(blanco); btnEdit.setFocusPainted(false); // Estilo botón editar
+        btnDel.setBackground(new Color(244, 67, 54)); btnDel.setForeground(blanco); btnDel.setFocusPainted(false); // Estilo botón eliminar
+        btnNew.addActionListener(e -> dialogo(null)); // Abre diálogo para nueva relación
+        btnEdit.addActionListener(e -> editar()); // Edita relación seleccionada
+        btnDel.addActionListener(e -> eliminar()); // Elimina relación seleccionada
+        pnl.add(btnNew); // Añade botón Nuevo
+        pnl.add(btnEdit); // Añade botón Editar
+        pnl.add(btnDel); // Añade botón Eliminar
         add(pnl, BorderLayout.SOUTH); // Agrega panel de botones abajo
     }
 
@@ -76,7 +76,7 @@ public class CitaTratamientoPanel extends JPanel {
      */
     public void loadData() {
         model.setRowCount(0); // Limpia filas previas
-        for (CitaTratamiento ct : controller.findAll()) { // Recorre cada relaciÃƒÂ³n
+        for (CitaTratamiento ct : controller.findAll()) { // Recorre cada relación
             model.addRow(new Object[]{
                 ct.getId(), // ID relación
                 ct.getCita().getCodCita(), // ID cita asociada
@@ -87,20 +87,20 @@ public class CitaTratamientoPanel extends JPanel {
     }
 
     /**
-     * Abre un diÃƒÂ¡logo para crear o editar una relaciÃƒÂ³n cita-tratamiento.
+     * Abre un diálogo para crear o editar una relación cita-tratamiento.
      */
     private void dialogo(CitaTratamiento ct) {
         JDialog d = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
-                ct == null ? "Nueva Cita-Tratamiento" : "Editar Cita-Tratamiento", true); // DiÃƒÂ¡logo modal
-        d.setSize(350, 220); // TamaÃƒÂ±o del diÃƒÂ¡logo
-        d.setLocationRelativeTo(this); // Centra el diÃƒÂ¡logo
-        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo diÃƒÂ¡logo
+                ct == null ? "Nueva Cita-Tratamiento" : "Editar Cita-Tratamiento", true); // Diálogo modal
+        d.setSize(350, 220); // Tamaño del diálogo
+        d.setLocationRelativeTo(this); // Centra el diálogo
+        d.getContentPane().setBackground(new Color(240, 245, 250)); // Fondo diálogo
 
         JTextField txtCita = new JTextField(); // Campo cita
         JTextField txtTrat = new JTextField(); // Campo tratamiento
         JTextField txtCant = new JTextField(); // Campo cantidad
 
-        if (ct != null) { // Si se edita una relaciÃƒÂ³n existente
+        if (ct != null) { // Si se edita una relación existente
             txtCita.setText(String.valueOf(ct.getCita().getCodCita())); // Carga ID cita
             txtTrat.setText(ct.getTratamiento().getNombreTratamiento()); // Carga tratamiento
             txtCant.setText(String.valueOf(ct.getCantidad())); // Carga cantidad
@@ -115,51 +115,51 @@ public class CitaTratamientoPanel extends JPanel {
 
         JPanel pnlBtn = new JPanel(); // Panel de botones
         pnlBtn.setBackground(new Color(240, 245, 250)); // Fondo panel
-        JButton btnOk = new JButton("Guardar"); // BotÃƒÂ³n guardar
-        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false); // Estilo botÃƒÂ³n guardar
-        JButton btnCancel = new JButton("Cancelar"); // BotÃƒÂ³n cancelar
-        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false); // Estilo botÃƒÂ³n cancelar
+        JButton btnOk = new JButton("Guardar"); // Botón guardar
+        btnOk.setBackground(azul); btnOk.setForeground(blanco); btnOk.setFocusPainted(false); // Estilo botón guardar
+        JButton btnCancel = new JButton("Cancelar"); // Botón cancelar
+        btnCancel.setBackground(new Color(158, 158, 158)); btnCancel.setForeground(blanco); btnCancel.setFocusPainted(false); // Estilo botón cancelar
         btnOk.addActionListener(e -> {
             try {
-                if (ct == null) { // Si se crea una relaciÃƒÂ³n nueva
+                if (ct == null) { // Si se crea una relación nueva
                     CitaTratamiento n = new CitaTratamiento(); // Crea entidad nueva
                     n.setCantidad(Integer.parseInt(txtCant.getText())); // Asigna cantidad
-                    controller.create(n); // Guarda la relaciÃƒÂ³n
-                } else { // Si se edita una relaciÃƒÂ³n existente
+                    controller.create(n); // Guarda la relación
+                } else { // Si se edita una relación existente
                     ct.setCantidad(Integer.parseInt(txtCant.getText())); // Actualiza cantidad
                     controller.update(ct); // Guarda cambios
                 }
                 loadData(); // Recarga datos
-                d.dispose(); // Cierra diÃƒÂ¡logo
+                d.dispose(); // Cierra diálogo
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(d, "Error: " + ex.getMessage()); // Muestra error
             }
         });
-        btnCancel.addActionListener(e -> d.dispose()); // Cierra diÃƒÂ¡logo
-        pnlBtn.add(btnOk); // AÃƒÂ±ade botÃƒÂ³n Guardar
-        pnlBtn.add(btnCancel); // AÃƒÂ±ade botÃƒÂ³n Cancelar
+        btnCancel.addActionListener(e -> d.dispose()); // Cierra diálogo
+        pnlBtn.add(btnOk); // Añade botón Guardar
+        pnlBtn.add(btnCancel); // Añade botón Cancelar
         d.add(pnlBtn, BorderLayout.SOUTH); // Agrega botones abajo
-        d.setVisible(true); // Muestra diÃƒÂ¡logo
+        d.setVisible(true); // Muestra diálogo
     }
 
     /**
-     * Abre el diÃƒÂ¡logo de ediciÃƒÂ³n para la relaciÃƒÂ³n seleccionada.
+     * Abre el diálogo de edición para la relación seleccionada.
      */
     private void editar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una relaciÃƒÂ³n"); return; } // Valida selecciÃƒÂ³n
-        dialogo(controller.findById((Integer) model.getValueAt(row, 0))); // Abre diÃƒÂ¡logo con relaciÃƒÂ³n seleccionada
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una relación"); return; } // Valida selección
+        dialogo(controller.findById((Integer) model.getValueAt(row, 0))); // Abre diálogo con relación seleccionada
     }
 
     /**
-     * Elimina la relaciÃƒÂ³n seleccionada despuÃƒÂ©s de pedir confirmaciÃƒÂ³n.
+     * Elimina la relación seleccionada después de pedir confirmación.
      */
     private void eliminar() {
         int row = table.getSelectedRow(); // Obtiene fila seleccionada
-        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una relaciÃƒÂ³n"); return; } // Valida selecciÃƒÂ³n
-        if (JOptionPane.showConfirmDialog(this, "Eliminar relaciÃƒÂ³n?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminaciÃƒÂ³n
-            controller.delete((Integer) model.getValueAt(row, 0)); // Elimina relaciÃƒÂ³n
+        if (row == -1) { JOptionPane.showMessageDialog(this, "Selecciona una relación"); return; } // Valida selección
+        if (JOptionPane.showConfirmDialog(this, "Eliminar relación?", "Confirmar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // Confirma eliminación
+            controller.delete((Integer) model.getValueAt(row, 0)); // Elimina relación
             loadData(); // Recarga datos
         }
     }
