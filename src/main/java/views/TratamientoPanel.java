@@ -41,7 +41,7 @@ public class TratamientoPanel extends JPanel {
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Margen superior/inferior
         add(titulo, BorderLayout.NORTH); // Agrega el tí­tulo arriba
 
-        String[] cols = {"ID", "Nombre", "Descripcion", "Precio (Ã¢â€šÂ¬)", "Duracion (min)"}; // Columnas de la tabla
+        String[] cols = {"ID", "Nombre", "Descripción", "Precio", "Duración (min)"}; // Columnas de la tabla
         model = new DefaultTableModel(cols, 0) { // Modelo de tabla no editable
             public boolean isCellEditable(int r, int c) { return false; } // Evita cambios directos
         };
